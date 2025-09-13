@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { themeParams, useSignal } from '@telegram-apps/sdk-react';
-import { List } from '@telegram-apps/telegram-ui';
+import { themeParams, useSignal } from '@telegram-apps/sdk-react'
+import { List } from '@telegram-apps/telegram-ui'
 
-import { DisplayData } from '@/components/DisplayData/DisplayData';
-import { Page } from '@/components/Page';
+import { DisplayData } from '@/components/DisplayData/DisplayData'
+import { Page } from '@/components/Page'
 
 export default function ThemeParamsPage() {
-  const tp = useSignal(themeParams.state);
+  const tp = useSignal(themeParams.state)
 
   return (
     <Page>
@@ -22,5 +22,5 @@ export default function ThemeParamsPage() {
         />
       </List>
     </Page>
-  );
+  )
 }

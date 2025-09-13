@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { useLaunchParams } from '@telegram-apps/sdk-react';
-import { List } from '@telegram-apps/telegram-ui';
+import { useLaunchParams } from '@telegram-apps/sdk-react'
+import { List } from '@telegram-apps/telegram-ui'
 
-import { DisplayData } from '@/components/DisplayData/DisplayData';
-import { Page } from '@/components/Page';
+import { DisplayData } from '@/components/DisplayData/DisplayData'
+import { Page } from '@/components/Page'
 
 export default function LaunchParamsPage() {
-  const lp = useLaunchParams();
+  const lp = useLaunchParams()
 
   return (
     <Page>
@@ -29,5 +29,5 @@ export default function LaunchParamsPage() {
         />
       </List>
     </Page>
-  );
+  )
 }

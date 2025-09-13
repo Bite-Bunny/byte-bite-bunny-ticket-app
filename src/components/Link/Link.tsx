@@ -1,13 +1,10 @@
-import { openLink } from '@telegram-apps/sdk-react';
-import { type FC, type MouseEventHandler, type JSX, useCallback } from 'react';
-import {
-  type LinkProps as NextLinkProps,
-  default as NextLink,
-} from 'next/link';
+import { openLink } from '@telegram-apps/sdk-react'
+import { type FC, type MouseEventHandler, type JSX, useCallback } from 'react'
+import { type LinkProps as NextLinkProps, default as NextLink } from 'next/link'
 
-import { classNames } from '@/css/classnames';
+import { classNames } from '@/css/classnames'
 
-import './Link.css';
+import './Link.css'
 
 export interface LinkProps
   extends NextLinkProps,
@@ -21,31 +18,31 @@ export const Link: FC<LinkProps> = ({
 }) => {
   const onClick = useCallback<MouseEventHandler<HTMLAnchorElement>>(
     (e) => {
-      propsOnClick?.(e);
+      propsOnClick?.(e)
 
       // Compute if target path is external. In this case we would like to open link using
       // TMA method.
-      let path: string;
+      let path: string
       if (typeof href === 'string') {
-        path = href;
+        path = href
       } else {
-        const { search = '', pathname = '', hash = '' } = href;
-        path = `${pathname}?${search}#${hash}`;
+        const { search = '', pathname = '', hash = '' } = href
+        path = `${pathname}?${search}#${hash}`
       }
 
-      const targetUrl = new URL(path, window.location.toString());
-      const currentUrl = new URL(window.location.toString());
+      const targetUrl = new URL(path, window.location.toString())
+      const currentUrl = new URL(window.location.toString())
       const isExternal =
         targetUrl.protocol !== currentUrl.protocol ||
-        targetUrl.host !== currentUrl.host;
+        targetUrl.host !== currentUrl.host
 
       if (isExternal) {
-        e.preventDefault();
-        openLink(targetUrl.toString());
+        e.preventDefault()
+        openLink(targetUrl.toString())
       }
     },
     [href, propsOnClick],
-  );
+  )
 
   return (
     <NextLink
@@ -54,5 +51,5 @@ export const Link: FC<LinkProps> = ({
       onClick={onClick}
       className={classNames(className, 'link')}
     />
-  );
-};
+  )
+}

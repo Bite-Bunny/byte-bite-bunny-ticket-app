@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { openLink } from '@telegram-apps/sdk-react';
-import { TonConnectButton, useTonWallet } from '@tonconnect/ui-react';
+import { openLink } from '@telegram-apps/sdk-react'
+import { TonConnectButton, useTonWallet } from '@tonconnect/ui-react'
 import {
   Avatar,
   Cell,
@@ -11,18 +11,18 @@ import {
   Section,
   Text,
   Title,
-} from '@telegram-apps/telegram-ui';
+} from '@telegram-apps/telegram-ui'
 
-import { DisplayData } from '@/components/DisplayData/DisplayData';
-import { Page } from '@/components/Page';
-import { bem } from '@/css/bem';
+import { DisplayData } from '@/components/DisplayData/DisplayData'
+import { Page } from '@/components/Page'
+import { bem } from '@/css/bem'
 
-import './TONConnectPage.css';
+import './TONConnectPage.css'
 
-const [, e] = bem('ton-connect-page');
+const [, e] = bem('ton-connect-page')
 
 export default function TONConnectPage() {
-  const wallet = useTonWallet();
+  const wallet = useTonWallet()
 
   if (!wallet) {
     return (
@@ -41,13 +41,13 @@ export default function TONConnectPage() {
           }
         />
       </Page>
-    );
+    )
   }
 
   const {
     account: { chain, publicKey, address },
     device: { appName, appVersion, maxProtocolVersion, platform, features },
-  } = wallet;
+  } = wallet
 
   return (
     <Page>
@@ -67,8 +67,8 @@ export default function TONConnectPage() {
                 after={<Navigation>About wallet</Navigation>}
                 subtitle={wallet.appName}
                 onClick={(e) => {
-                  e.preventDefault();
-                  openLink(wallet.aboutUrl);
+                  e.preventDefault()
+                  openLink(wallet.aboutUrl)
                 }}
               >
                 <Title level="3">{wallet.name}</Title>
@@ -103,5 +103,5 @@ export default function TONConnectPage() {
         />
       </List>
     </Page>
-  );
+  )
 }
