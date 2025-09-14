@@ -1,0 +1,142 @@
+.mobile-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.mobile-layout__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #d2691e 0%, #8b4513 100%);
+  z-index: -1;
+}
+
+.mobile-layout__content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.mobile-layout__header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px 40px;
+  flex-shrink: 0;
+}
+
+.mobile-layout__logo {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+.mobile-layout__title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+}
+
+.mobile-layout__title-bite {
+  display: inline-block;
+  position: relative;
+}
+
+.mobile-layout__title-bite::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+
+.mobile-layout__title-bite::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50% 50% 0 50%;
+  transform: rotate(45deg);
+}
+
+.mobile-layout__title-bunny {
+  display: inline-block;
+  position: relative;
+}
+
+.mobile-layout__title-bunny::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+
+.mobile-layout__title-bunny::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50% 50% 0 50%;
+  transform: rotate(45deg);
+}
+
+.mobile-layout__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 100px;
+  overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .mobile-layout__title {
+    font-size: 32px;
+  }
+
+  .mobile-layout__header {
+    padding: 50px 20px 30px;
+  }
+}
+
+@media (max-height: 667px) {
+  .mobile-layout__header {
+    padding: 40px 20px 20px;
+  }
+
+  .mobile-layout__title {
+    font-size: 30px;
+  }
+}

@@ -1,12 +1,8 @@
-import { Page } from '@/components/Page'
+import { MobileLayout } from '@/components/MobileLayout'
 import React from 'react'
 
 const Home = () => {
-  return (
-    <Page>
-      <div className="text-2xl font-bold text-red-500">Home</div>
-    </Page>
-  )
+  return <MobileLayout />
 }
 
 export default Home

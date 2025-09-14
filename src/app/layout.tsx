@@ -10,8 +10,10 @@ import 'normalize.css/normalize.css'
 import './_assets/globals.css'
 
 export const metadata: Metadata = {
-  title: 'Your Application Title Goes Here',
-  description: 'Your application description goes here',
+  title: 'Bite Bunny',
+  description: 'Your go-to app for managing tickets and more',
+  viewport:
+    'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
 }
 
 export default async function RootLayout({ children }: PropsWithChildren) {
@@ -19,6 +21,12 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </head>
       <body>
         <I18nProvider>
           <Root>{children}</Root>

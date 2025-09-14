@@ -2,8 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
-  background: var(--tg-theme-secondary-bg-color, white);
-  padding: 0;
+  height: 100%;
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--tg-theme-secondary-bg-color, #d2691e);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#__next {
+  height: 100%;
+}
+
+/* Ensure mobile layout takes full viewport */
+.mobile-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+/* Hide scrollbars but keep functionality */
+.mobile-layout__main {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.mobile-layout__main::-webkit-scrollbar {
+  display: none; /* WebKit */
 }
