@@ -1,7 +1,7 @@
-import { MobileLayout } from '@/components/MobileLayout'
+import { ConvertContent } from '@/pages/ConvertContent'
 
 const ConvertPage = () => {
-  return <MobileLayout currentTab="convert" />
+  return <ConvertContent />
 }
 
 export default ConvertPage

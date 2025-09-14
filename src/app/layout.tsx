@@ -4,6 +4,7 @@ import { getLocale } from 'next-intl/server'
 
 import { Root } from '@/components/Root/Root'
 import { I18nProvider } from '@/core/i18n/provider'
+import { PersistentLayout } from '@/components/PersistentLayout/PersistentLayout'
 
 import '@telegram-apps/telegram-ui/dist/styles.css'
 import 'normalize.css/normalize.css'
@@ -29,7 +30,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       </head>
       <body>
         <I18nProvider>
-          <Root>{children}</Root>
+          <Root>
+            <PersistentLayout>{children}</PersistentLayout>
+          </Root>
         </I18nProvider>
       </body>
     </html>

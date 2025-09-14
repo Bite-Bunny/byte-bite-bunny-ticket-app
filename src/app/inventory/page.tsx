@@ -1,7 +1,7 @@
-import { MobileLayout } from '@/components/MobileLayout'
+import { InventoryContent } from '@/pages/InventoryContent'
 
 const InventoryPage = () => {
-  return <MobileLayout currentTab="inventory" />
+  return <InventoryContent />
 }
 
 export default InventoryPage

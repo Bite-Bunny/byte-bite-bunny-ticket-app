@@ -1,8 +1,8 @@
-import { MobileLayout } from '@/components/MobileLayout'
+import { HomeContent } from '@/pages/HomeContent'
 import React from 'react'
 
 const Home = () => {
-  return <MobileLayout currentTab="home" />
+  return <HomeContent />
 }
 
 export default Home
