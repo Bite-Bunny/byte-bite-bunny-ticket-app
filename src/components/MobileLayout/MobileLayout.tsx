@@ -15,7 +15,16 @@ interface MobileLayoutProps {
 export function MobileLayout({ currentTab }: MobileLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const [activeTab, setActiveTab] = useState<TabType>('home')
+
+  // Initialize state based on current route to prevent blinking
+  const getInitialTab = (): TabType => {
+    if (currentTab) return currentTab
+    if (pathname === '/convert') return 'convert'
+    if (pathname === '/inventory') return 'inventory'
+    return 'home'
+  }
+
+  const [activeTab, setActiveTab] = useState<TabType>(getInitialTab)
 
   useEffect(() => {
     if (currentTab) {
