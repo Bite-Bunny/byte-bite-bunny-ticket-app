@@ -18,7 +18,18 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(180deg, #d2691e 0%, #8b4513 100%);
+  background:
+    radial-gradient(
+      at 118% 95%,
+      rgba(255, 161, 10, 0) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    ),
+    radial-gradient(
+      at 18% 28%,
+      rgba(255, 9, 9, 0) 0%,
+      rgba(255, 0, 0, 0.2) 100%
+    ),
+    radial-gradient(at 58% 9%, #886403 0%, #000000 100%);
   z-index: -1;
 }
 
