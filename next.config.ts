@@ -3,6 +3,10 @@ import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin('./src/core/i18n/i18n.ts')
 
-const nextConfig: NextConfig = {}
+const nextConfig: NextConfig = {
+  env: {
+    API_URL: process.env.NEXT_PUBLIC_API_URL,
+  },
+}
 
 export default withNextIntl(nextConfig)

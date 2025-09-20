@@ -13,6 +13,7 @@
     "@telegram-apps/sdk-react": "^3.2.4",
     "@telegram-apps/telegram-ui": "^2.1.5",
     "@tonconnect/ui-react": "^2.1.0",
+    "axios": "^1.12.2",
     "eruda": "^3.0.1",
     "lucide-react": "^0.544.0",
     "next": "15.3.1",
