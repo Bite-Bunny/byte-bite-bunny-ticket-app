@@ -12,6 +12,7 @@ import { AppRoot } from '@telegram-apps/telegram-ui'
 
 import { useDidMount } from '@/hooks/useDidMount'
 import { setLocale } from '@/core/i18n/locale'
+import WebSocketProvider from '@/shared/components/WebSocketProvider'
 
 import { ErrorBoundary } from '../ErrorBoundary'
 import { ErrorPage } from '../ErrorPage'
@@ -35,7 +36,7 @@ function RootInner({ children }: PropsWithChildren) {
           ['macos', 'ios'].includes(lp.tgWebAppPlatform) ? 'ios' : 'base'
         }
       >
-        {children}
+        <WebSocketProvider>{children}</WebSocketProvider>
       </AppRoot>
     </TonConnectUIProvider>
   )
