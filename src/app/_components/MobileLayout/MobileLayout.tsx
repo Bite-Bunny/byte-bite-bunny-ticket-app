@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import './MobileLayout.css'
 import { MobileNavBar } from './MobileNavBar'
 import Image from 'next/image'
 
@@ -56,20 +55,29 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
   }
 
   return (
-    <div className="mobile-layout">
-      <div className="mobile-layout__background" />
-      <div className="mobile-layout__content">
-        <div className="mobile-layout__header">
+    <div className="fixed top-0 left-0 right-0 bottom-0 w-screen h-screen overflow-hidden flex flex-col z-[1]">
+      <div
+        className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-br from-[#886403] via-black to-black z-[-1]"
+        style={{
+          background: `
+               radial-gradient(at 118% 95%, rgba(255, 161, 10, 0) 0%, rgba(0, 0, 0, 0.2) 100%),
+               radial-gradient(at 18% 28%, rgba(255, 9, 9, 0) 0%, rgba(255, 0, 0, 0.2) 100%),
+               radial-gradient(at 58% 9%, #886403 0%, #000000 100%)
+             `,
+        }}
+      />
+      <div className="relative w-full h-full flex flex-col z-[1]">
+        <div className="flex justify-center items-center px-5 py-[60px] pb-10 flex-shrink-0 max-sm:px-5 max-sm:py-[50px] max-sm:pb-[30px] max-h-667:px-5 max-h-667:py-10 max-h-667:pb-5">
           <Image
             src="/logo.svg"
             alt="Bite Bunny Logo"
             width={99}
             height={20}
-            className="mobile-layout__logo"
+            className="brightness-0 invert opacity-90"
           />
         </div>
 
-        <div className="mobile-layout__main">
+        <div className="flex-1 flex flex-col px-5 pb-[100px] overflow-y-auto scrollbar-none">
           {/* Empty main content area */}
         </div>
 

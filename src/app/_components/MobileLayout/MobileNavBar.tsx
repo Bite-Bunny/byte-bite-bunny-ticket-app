@@ -2,7 +2,6 @@
 
 import { Home, RefreshCw, ShoppingBag } from 'lucide-react'
 import { TabType } from './MobileLayout'
-import './MobileNavBar.css'
 
 interface MobileNavBarProps {
   activeTab: TabType
@@ -17,8 +16,14 @@ const tabs = [
 
 export function MobileNavBar({ activeTab, onTabChange }: MobileNavBarProps) {
   return (
-    <div className="mobile-nav-bar">
-      <div className="mobile-nav-bar__container">
+    <div className="fixed bottom-0 left-0 right-0 z-[1000] px-5 pb-6 pt-4">
+      <div
+        className="flex justify-around items-center bg-white/10 backdrop-blur-[20px] rounded-3xl px-2 py-3 shadow-[-8px_32px_rgba(0,0,0,0.3)] border border-white/15"
+        style={{
+          boxShadow:
+            '0 -8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+        }}
+      >
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -26,14 +31,33 @@ export function MobileNavBar({ activeTab, onTabChange }: MobileNavBarProps) {
           return (
             <button
               key={tab.id}
-              className={`mobile-nav-bar__tab ${isActive ? 'mobile-nav-bar__tab--active' : ''}`}
+              className={`relative flex items-center justify-center bg-none border-none cursor-pointer px-5 py-4 rounded-[18px] min-w-[70px] touch-manipulation ${
+                isActive
+                  ? 'bg-white/15 backdrop-blur-[10px] border border-white/10'
+                  : ''
+              }`}
               onClick={() => onTabChange(tab.id)}
+              style={{
+                WebkitTapHighlightColor: 'transparent',
+                boxShadow: isActive
+                  ? 'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+                  : 'none',
+              }}
             >
-              {isActive && <div className="mobile-nav-bar__tab-background" />}
-
-              <div className="mobile-nav-bar__tab-content">
-                <Icon size={24} className="mobile-nav-bar__tab-icon" />
-                <span className="mobile-nav-bar__tab-label">{tab.label}</span>
+              <div className="flex flex-col items-center gap-1.5 z-[1]">
+                <Icon
+                  size={24}
+                  className={`stroke-[1.5] drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
+                    isActive ? 'text-white' : 'text-white/90'
+                  }`}
+                />
+                <span
+                  className={`text-[11px] font-medium text-center tracking-[0.3px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
+                    isActive ? 'text-white' : 'text-white/90'
+                  }`}
+                >
+                  {tab.label}
+                </span>
               </div>
             </button>
           )

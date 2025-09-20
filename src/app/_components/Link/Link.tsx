@@ -4,8 +4,6 @@ import { type LinkProps as NextLinkProps, default as NextLink } from 'next/link'
 
 import { classNames } from '@/css/classnames'
 
-import './Link.css'
-
 export interface LinkProps
   extends NextLinkProps,
     Omit<JSX.IntrinsicElements['a'], 'href'> {}
@@ -49,7 +47,10 @@ export const Link: FC<LinkProps> = ({
       {...rest}
       href={href}
       onClick={onClick}
-      className={classNames(className, 'link')}
+      className={classNames(
+        className,
+        'no-underline text-[var(--tg-theme-link-color)]',
+      )}
     />
   )
 }

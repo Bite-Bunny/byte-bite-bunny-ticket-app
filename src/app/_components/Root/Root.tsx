@@ -13,7 +13,6 @@ import { AppRoot } from '@telegram-apps/telegram-ui'
 import { useDidMount } from '@/hooks/useDidMount'
 import { setLocale } from '@/core/i18n/locale'
 
-import './styles.css'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { ErrorPage } from '../ErrorPage'
 
@@ -53,6 +52,8 @@ export function Root(props: PropsWithChildren) {
       <RootInner {...props} />
     </ErrorBoundary>
   ) : (
-    <div className="root__loading">Loading</div>
+    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+      Loading
+    </div>
   )
 }

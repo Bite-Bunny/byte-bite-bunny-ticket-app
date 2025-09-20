@@ -7,7 +7,9 @@ const HomeContent = dynamic(
   () => import('@/features/home').then((mod) => ({ default: mod.HomeContent })),
   {
     ssr: false,
-    loading: () => <div className="page-content">Loading...</div>,
+    loading: () => (
+      <div className="flex items-center justify-center p-4">Loading...</div>
+    ),
   },
 )
 
