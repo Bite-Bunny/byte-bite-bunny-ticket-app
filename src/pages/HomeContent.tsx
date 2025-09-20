@@ -1,5 +1,12 @@
+'use client'
+
+import TelegramProvider from '@/components/TelegramProvider'
+import UserData from '@/components/UserData'
+
 export default function HomeContent() {
   return (
-    <div className="page-content">{/* Empty main content area for home */}</div>
+    <TelegramProvider fallback={<div className="page-content">Loading...</div>}>
+      <UserData />
+    </TelegramProvider>
   )
 }
