@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
-import { MobileNavBar } from '@/components/MobileLayout/MobileNavBar'
-import type { TabType } from '@/components/MobileLayout/MobileLayout'
 import './PersistentLayout.css'
+import { MobileNavBar, TabType } from '../MobileLayout'
 
 interface PersistentLayoutProps {
   children: React.ReactNode

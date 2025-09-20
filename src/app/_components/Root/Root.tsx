@@ -10,12 +10,12 @@ import {
 import { TonConnectUIProvider } from '@tonconnect/ui-react'
 import { AppRoot } from '@telegram-apps/telegram-ui'
 
-import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { ErrorPage } from '@/components/ErrorPage'
 import { useDidMount } from '@/hooks/useDidMount'
 import { setLocale } from '@/core/i18n/locale'
 
 import './styles.css'
+import { ErrorBoundary } from '../ErrorBoundary'
+import { ErrorPage } from '../ErrorPage'
 
 function RootInner({ children }: PropsWithChildren) {
   const lp = useLaunchParams()

@@ -1,6 +1,6 @@
 'use client'
 
-import useMe from '@/hooks/useMe'
+import useMe from '../hooks/useMe'
 
 export default function UserData() {
   const { data: me, isLoading, error } = useMe()

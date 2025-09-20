@@ -1,4 +1,4 @@
-import ConvertContent from '@/pages/ConvertContent'
+import { ConvertContent } from '@/features/convert'
 
 const ConvertPage = () => {
   return <ConvertContent />

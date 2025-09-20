@@ -1,4 +1,4 @@
-import InventoryContent from '@/pages/InventoryContent'
+import { InventoryContent } from '@/features/inventory'
 
 const InventoryPage = () => {
   return <InventoryContent />

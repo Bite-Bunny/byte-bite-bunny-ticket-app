@@ -1,7 +1,7 @@
 'use client'
 
-import TelegramProvider from '@/components/TelegramProvider'
-import UserData from '@/components/UserData'
+import TelegramProvider from '@/shared/components/TelegramProvider'
+import UserData from '@/shared/components/UserData'
 
 export default function HomeContent() {
   return (

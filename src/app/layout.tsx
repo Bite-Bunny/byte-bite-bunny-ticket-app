@@ -2,13 +2,13 @@ import type { PropsWithChildren } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { getLocale } from 'next-intl/server'
 
-import { Root } from '@/components/Root/Root'
 import { I18nProvider } from '@/core/i18n/provider'
-import { PersistentLayout } from '@/components/PersistentLayout/PersistentLayout'
 
 import '@telegram-apps/telegram-ui/dist/styles.css'
 import 'normalize.css/normalize.css'
 import './_assets/globals.css'
+import { Root } from './_components/Root/Root'
+import { PersistentLayout } from './_components/PersistentLayout'
 
 export const metadata: Metadata = {
   title: 'Bite Bunny',
