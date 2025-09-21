@@ -1,46 +1,11 @@
 'use client'
 
-import { type PropsWithChildren, useEffect } from 'react'
-import {
-  initData,
-  miniApp,
-  useLaunchParams,
-  useSignal,
-} from '@telegram-apps/sdk-react'
-import { TonConnectUIProvider } from '@tonconnect/ui-react'
-import { AppRoot } from '@telegram-apps/telegram-ui'
+import { type PropsWithChildren } from 'react'
 
 import { useDidMount } from '@/shared/hooks/useDidMount'
-import { setLocale } from '@/core/i18n/locale'
-import WebSocketProvider from '@/shared/components/WebSocketProvider'
 
 import { ErrorBoundary } from '../ErrorBoundary'
 import { ErrorPage } from '../ErrorPage'
-
-function RootInner({ children }: PropsWithChildren) {
-  const lp = useLaunchParams()
-
-  const isDark = useSignal(miniApp.isDark)
-  const initDataUser = useSignal(initData.user)
-
-  // Set the user locale.
-  useEffect(() => {
-    initDataUser && setLocale(initDataUser.language_code)
-  }, [initDataUser])
-
-  return (
-    <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
-      <AppRoot
-        appearance={isDark ? 'dark' : 'light'}
-        platform={
-          ['macos', 'ios'].includes(lp.tgWebAppPlatform) ? 'ios' : 'base'
-        }
-      >
-        <WebSocketProvider>{children}</WebSocketProvider>
-      </AppRoot>
-    </TonConnectUIProvider>
-  )
-}
 
 export function Root(props: PropsWithChildren) {
   // Unfortunately, Telegram Mini Apps does not allow us to use all features of
@@ -49,9 +14,7 @@ export function Root(props: PropsWithChildren) {
   const didMount = useDidMount()
 
   return didMount ? (
-    <ErrorBoundary fallback={ErrorPage}>
-      <RootInner {...props} />
-    </ErrorBoundary>
+    <ErrorBoundary fallback={ErrorPage}>{props.children}</ErrorBoundary>
   ) : (
     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
       Loading
