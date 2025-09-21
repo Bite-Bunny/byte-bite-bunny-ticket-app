@@ -11,7 +11,7 @@ export const Button = ({
     type="button"
     ref={ref}
     className={cn(
-      'focus-visible:styled-outline bg-brand text-black hover:bg-brand-light focus:bg-brand-light violet:bg-brand-violet violet:text-white violet:hover:bg-brand-violet-light violet:focus:bg-brand-violet-light flex h-12 w-full items-center justify-center rounded-lg text-base font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+      'focus-visible:styled-outline bg-white/10 backdrop-blur-md border border-white/20 text-white/90 md:hover:bg-white/20 md:hover:border-white/30 focus:bg-white/20 focus:border-white/30 shadow-lg shadow-black/20 flex h-12 w-full items-center justify-center rounded-lg text-base font-medium disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-white/5',
       className,
     )}
     {...props}
