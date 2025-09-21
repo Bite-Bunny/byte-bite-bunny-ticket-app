@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import TelegramProvider from '@/shared/components/TelegramProvider'
+import { Button } from '@/shared/components/ui/Button'
 
 export default function HomeContent() {
   return (
@@ -18,6 +19,10 @@ export default function HomeContent() {
           >
             Test Page
           </Link>
+        </div>
+
+        <div className="flex flex-col space-y-4">
+          <Button>Test Button</Button>
         </div>
 
         <div className="flex flex-col items-center justify-center space-y-4">

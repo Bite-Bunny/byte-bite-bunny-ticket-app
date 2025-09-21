@@ -12,16 +12,17 @@
   "dependencies": {
     "@tanstack/react-query": "^5.89.0",
     "@telegram-apps/sdk-react": "^3.2.4",
-    "@telegram-apps/telegram-ui": "^2.1.5",
     "@tonconnect/ui-react": "^2.1.0",
     "axios": "^1.12.2",
+    "clsx": "^2.1.1",
     "eruda": "^3.0.1",
     "lucide-react": "^0.544.0",
     "next": "15.3.1",
     "next-intl": "^4.1.0",
     "normalize.css": "^8.0.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@types/node": "^20",
