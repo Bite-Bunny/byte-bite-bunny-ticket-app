@@ -16,7 +16,7 @@ const tabs = [
 
 export function MobileNavBar({ activeTab, onTabChange }: MobileNavBarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[1000] px-5 pb-6 pt-4">
+    <div className="fixed bottom-0 left-0 right-0 z-[1000] px-5 pb-1 pt-4">
       <div
         className="flex justify-around items-center bg-white/10 backdrop-blur-[20px] rounded-3xl px-2 py-3 shadow-[-8px_32px_rgba(0,0,0,0.3)] border border-white/15"
         style={{

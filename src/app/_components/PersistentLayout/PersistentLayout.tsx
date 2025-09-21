@@ -60,7 +60,7 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
         }}
       />
       <div className="relative w-full h-full flex flex-col z-[1]">
-        <div className="flex justify-center items-center px-5 py-[60px] pb-10 flex-shrink-0 max-sm:px-5 max-sm:py-[50px] max-sm:pb-[30px] max-h-667:px-5 max-h-667:py-10 max-h-667:pb-5">
+        <div className="flex justify-center items-center px-5 py-[10px] flex-shrink-0 max-sm:px-5 max-sm:py-[50px] max-sm:pb-[30px] max-h-667:px-5 max-h-667:py-10 max-h-667:pb-5">
           <Image
             src="/logo.svg"
             alt="Bite Bunny Logo"
