@@ -10,7 +10,7 @@ import {
 import { TonConnectUIProvider } from '@tonconnect/ui-react'
 import { AppRoot } from '@telegram-apps/telegram-ui'
 
-import { useDidMount } from '@/hooks/useDidMount'
+import { useDidMount } from '@/shared/hooks/useDidMount'
 import { setLocale } from '@/core/i18n/locale'
 import WebSocketProvider from '@/shared/components/WebSocketProvider'
 

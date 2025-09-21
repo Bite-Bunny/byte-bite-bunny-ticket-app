@@ -1,6 +1,6 @@
 'use client'
 
-import { useWebSocket } from '@/hooks/useWebSocket'
+import { useWebSocket } from '@/shared/hooks/useWebSocket'
 
 export default function WebSocketStatus() {
   const { isConnected, lastMessage, error } = useWebSocket()
