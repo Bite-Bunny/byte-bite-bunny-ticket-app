@@ -1,6 +1,6 @@
 'use client'
 
-import { Ticket } from '@/shared/components/ui/Ticket'
+import { Ticket } from '@/shared/components/Ticket'
 
 export default function TestPage() {
   return (

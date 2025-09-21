@@ -71,7 +71,7 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
           />
         </div>
 
-        <div className="flex-1 flex flex-col px-5 pb-[100px] overflow-y-auto scrollbar-none">
+        <div className="flex-1 flex flex-col px-5 pb-[120px] overflow-y-auto scrollbar-none">
           {children}
         </div>
 
