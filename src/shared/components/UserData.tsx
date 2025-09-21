@@ -4,14 +4,14 @@ import { useRawInitData } from '@telegram-apps/sdk-react'
 import useMe from '../hooks/useMe'
 
 export default function UserData() {
-  const me = useMe()
+  const { data: me, isLoading, error } = useMe()
   const rawData = useRawInitData()
 
-  if (me.id === 0) {
+  if (isLoading) {
     return <div>Loading user data...</div>
   }
 
-  if (me.id === 0) {
+  if (error) {
     return <div>Error: </div>
   }
 
