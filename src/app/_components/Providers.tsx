@@ -3,7 +3,6 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import React, { PropsWithChildren, useEffect } from 'react'
 import { TonConnectUIProvider } from '@tonconnect/ui-react'
-import { AppRoot } from '@telegram-apps/telegram-ui'
 import {
   initData,
   miniApp,
@@ -30,14 +29,7 @@ const Providers = ({ children }: PropsWithChildren) => {
   return (
     <QueryClientProvider client={queryClient}>
       <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
-        <AppRoot
-          appearance={isDark ? 'dark' : 'light'}
-          platform={
-            ['macos', 'ios'].includes(lp.tgWebAppPlatform) ? 'ios' : 'base'
-          }
-        >
-          <WebSocketProvider>{children}</WebSocketProvider>
-        </AppRoot>
+        <WebSocketProvider>{children}</WebSocketProvider>
       </TonConnectUIProvider>
     </QueryClientProvider>
   )

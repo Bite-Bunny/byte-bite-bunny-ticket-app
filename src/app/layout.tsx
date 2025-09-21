@@ -2,7 +2,6 @@ import type { PropsWithChildren } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { getLocale } from 'next-intl/server'
 
-import '@telegram-apps/telegram-ui/dist/styles.css'
 import 'normalize.css/normalize.css'
 import './_assets/globals.css'
 import { Root } from './_components/Root/Root'
