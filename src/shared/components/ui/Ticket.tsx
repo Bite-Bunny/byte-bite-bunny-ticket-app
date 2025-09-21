@@ -117,13 +117,10 @@ export const Ticket = ({
         styles.border,
         styles.shadow,
         'border-2 shadow-lg',
+        'ticket-shape', // custom ticket corners
         sizeConfig.container,
         className,
       )}
-      style={{
-        clipPath:
-          'polygon(12% 0%, 88% 0%, 100% 12%, 100% 88%, 88% 100%, 12% 100%, 0% 88%, 0% 12%)',
-      }}
       {...props}
     >
       {/* Decorative stars */}

@@ -48,3 +48,30 @@
     display: none; /* WebKit */
   }
 }
+
+/* Ticket shape */
+
+.ticket-shape {
+  -webkit-mask:
+    radial-gradient(circle 14px at top left, transparent 98%, black 100%) top
+      left,
+    radial-gradient(circle 14px at top right, transparent 98%, black 100%) top
+      right,
+    radial-gradient(circle 14px at bottom left, transparent 98%, black 100%)
+      bottom left,
+    radial-gradient(circle 14px at bottom right, transparent 98%, black 100%)
+      bottom right;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 50% 50%;
+  mask:
+    radial-gradient(circle 14px at top left, transparent 98%, black 100%) top
+      left,
+    radial-gradient(circle 14px at top right, transparent 98%, black 100%) top
+      right,
+    radial-gradient(circle 14px at bottom left, transparent 98%, black 100%)
+      bottom left,
+    radial-gradient(circle 14px at bottom right, transparent 98%, black 100%)
+      bottom right;
+  mask-repeat: no-repeat;
+  mask-size: 50% 50%;
+}
