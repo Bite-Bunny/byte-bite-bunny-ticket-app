@@ -9,6 +9,7 @@ import 'normalize.css/normalize.css'
 import './_assets/globals.css'
 import { Root } from './_components/Root/Root'
 import { PersistentLayout } from './_components/PersistentLayout'
+import Providers from './_components/Providers'
 
 export const metadata: Metadata = {
   title: 'Bite Bunny',
@@ -30,7 +31,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       <body>
         <I18nProvider>
           <Root>
-            <PersistentLayout>{children}</PersistentLayout>
+            <PersistentLayout>
+              <Providers>{children}</Providers>
+            </PersistentLayout>
           </Root>
         </I18nProvider>
       </body>
