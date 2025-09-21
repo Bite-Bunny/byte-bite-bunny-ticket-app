@@ -8,7 +8,10 @@ export const apiClient = axios.create({
   baseURL: baseURL,
   headers: {
     ...axiosHeaders,
-    Authorization: initDataRaw,
+    // Authorization: initDataRaw,
+    Authorization: process.env.MOCK_INIT_AUTH
+      ? process.env.MOCK_INIT_AUTH
+      : initDataRaw,
   },
   timeout: axiosTimeout,
 })
