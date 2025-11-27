@@ -13,6 +13,12 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
 
+  // IMPORTANT: add all new routes to the array
+  // Check if current route is a known route (not 404)
+  const isKnownRoute = ['/', '/convert', '/inventory', '/settings'].includes(
+    pathname,
+  )
+
   // Initialize state based on current route to prevent blinking
   const getInitialTab = (): TabType => {
     if (pathname === '/convert') return 'convert'
@@ -77,11 +83,17 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
           />
         </div>
 
-        <div className="flex-1 flex flex-col px-5 pb-[120px] overflow-y-auto scrollbar-none">
+        <div
+          className={`flex-1 flex flex-col px-5 overflow-y-auto scrollbar-none ${
+            isKnownRoute ? 'pb-[120px]' : 'pb-5'
+          }`}
+        >
           {children}
         </div>
 
-        <MobileNavBar activeTab={activeTab} onTabChange={handleTabChange} />
+        {isKnownRoute && (
+          <MobileNavBar activeTab={activeTab} onTabChange={handleTabChange} />
+        )}
       </div>
     </div>
   )
