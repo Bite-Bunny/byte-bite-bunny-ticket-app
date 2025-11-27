@@ -1,25 +1,31 @@
 'use client'
 
 import { useRawInitData } from '@telegram-apps/sdk-react'
+import { useTranslations } from 'next-intl'
+import { Button } from '../components/ui/Button'
 import useMe from '../hooks/useMe'
 
 export default function UserData() {
+  const t = useTranslations('user')
+  const tCommon = useTranslations('common')
   const { data: me, isLoading, error } = useMe()
   const rawData = useRawInitData()
 
   if (isLoading) {
-    return <div>Loading user data...</div>
+    return <div>{t('loadingData')}</div>
   }
 
   if (error) {
-    return <div>Error: </div>
+    return <div>{tCommon('error')}: </div>
   }
 
   return (
     <div className="flex flex-col p-4 space-y-4">
-      <div>Welcome to Bite Bunny!</div>
+      <div>{t('welcome')}</div>
       <div>
-        <div>Coins: {me.coins}</div>
+        <div>
+          {t('coins')}: {me.coins}
+        </div>
       </div>
 
       <div>
@@ -27,14 +33,14 @@ export default function UserData() {
 
         <pre>{JSON.stringify(me, null, 2)}</pre>
 
-        <button
-          className="bg-blue-500 text-white p-2 rounded-md"
+        <Button
+          className="px-4 py-2 rounded-lg text-sm"
           onClick={() => {
             navigator.clipboard.writeText(rawData || '')
           }}
         >
-          Copy raw data
-        </button>
+          {t('copyRawData')}
+        </Button>
       </div>
     </div>
   )

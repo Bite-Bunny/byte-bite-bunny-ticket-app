@@ -1,6 +1,9 @@
+'use client'
+
 import { cn } from '@/shared/lib/cn'
 import type { ComponentProps } from 'react'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import TicketImage from '@/assets/ticket-logo.png'
 
 export type TicketVariant = 'bronze' | 'silver' | 'gold' | 'diamond'
@@ -105,6 +108,7 @@ export const Ticket = ({
   className,
   ...props
 }: TicketProps) => {
+  const t = useTranslations('ticket')
   const styles = variantStyles[variant]
   const sizeConfig = sizeStyles[size]
 
@@ -153,7 +157,7 @@ export const Ticket = ({
           sizeConfig.price,
         )}
       >
-        <span>PRICE</span>
+        <span>{t('price')}</span>
         <span className="font-bold">{price}</span>
         {showCarrot && <span>🥕</span>}
       </div>
@@ -169,7 +173,7 @@ export const Ticket = ({
           sizeConfig.quality,
         )}
       >
-        <span>QUALITY</span>
+        <span>{t('quality')}</span>
         <span className="font-bold">{quality}</span>
       </div>
     </div>

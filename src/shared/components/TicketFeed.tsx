@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, PanInfo } from 'framer-motion'
 import { ChevronUp, ChevronDown } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Ticket, type TicketVariant } from './Ticket'
 import { cn } from '@/shared/lib/cn'
 
@@ -32,6 +33,7 @@ const generateTickets = (count: number): TicketData[] => {
 }
 
 export const TicketFeed = ({ tickets, className }: TicketFeedProps) => {
+  const t = useTranslations('ticketFeed')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -241,12 +243,19 @@ export const TicketFeed = ({ tickets, className }: TicketFeedProps) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
           className={cn(
-            'w-8 h-8 rounded-full flex items-center justify-center',
-            'bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20',
-            'text-white/60 hover:text-white/80 transition-all',
-            'disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-white/5',
+            'relative w-8 h-8 rounded-full flex items-center justify-center',
+            'bg-white/10 backdrop-blur-[20px] border border-white/15',
+            'text-white/90 hover:text-white',
+            'hover:bg-white/15 hover:border-white/20',
+            'transition-all touch-manipulation',
+            'disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-white/10 disabled:hover:border-white/15',
           )}
-          aria-label="Previous ticket"
+          style={{
+            WebkitTapHighlightColor: 'transparent',
+            boxShadow:
+              '0 -8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+          }}
+          aria-label={t('previousTicket')}
         >
           <ChevronUp className="w-4 h-4" />
         </motion.button>
@@ -258,12 +267,19 @@ export const TicketFeed = ({ tickets, className }: TicketFeedProps) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
           className={cn(
-            'w-8 h-8 rounded-full flex items-center justify-center',
-            'bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20',
-            'text-white/60 hover:text-white/80 transition-all',
-            'disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-white/5',
+            'relative w-8 h-8 rounded-full flex items-center justify-center',
+            'bg-white/10 backdrop-blur-[20px] border border-white/15',
+            'text-white/90 hover:text-white',
+            'hover:bg-white/15 hover:border-white/20',
+            'transition-all touch-manipulation',
+            'disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-white/10 disabled:hover:border-white/15',
           )}
-          aria-label="Next ticket"
+          style={{
+            WebkitTapHighlightColor: 'transparent',
+            boxShadow:
+              '0 -8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+          }}
+          aria-label={t('nextTicket')}
         >
           <ChevronDown className="w-4 h-4" />
         </motion.button>

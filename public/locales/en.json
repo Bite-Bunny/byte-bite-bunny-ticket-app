@@ -1,6 +1,48 @@
 {
-  "i18n": {
-    "header": "Application supports i18n",
-    "footer": "You can select a different language from the dropdown menu."
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "tryAgain": "Try again"
+  },
+  "navigation": {
+    "home": "Home",
+    "convert": "Convert",
+    "inventory": "Inventory",
+    "settings": "Settings"
+  },
+  "ticket": {
+    "price": "PRICE",
+    "quality": "QUALITY"
+  },
+  "ticketFeed": {
+    "previousTicket": "Previous ticket",
+    "nextTicket": "Next ticket"
+  },
+  "websocket": {
+    "connected": "WebSocket Connected",
+    "disconnected": "WebSocket Disconnected",
+    "error": "Error",
+    "lastMessage": "Last"
+  },
+  "user": {
+    "welcome": "Welcome to Bite Bunny!",
+    "loadingData": "Loading user data...",
+    "coins": "Coins",
+    "copyRawData": "Copy raw data"
+  },
+  "test": {
+    "title": "Test Page",
+    "description": "This is a temporary test page for development purposes."
+  },
+  "error": {
+    "title": "An unhandled error occurred!",
+    "tryAgain": "Try again"
+  },
+  "app": {
+    "logoAlt": "Bite Bunny Logo"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language"
   }
 }

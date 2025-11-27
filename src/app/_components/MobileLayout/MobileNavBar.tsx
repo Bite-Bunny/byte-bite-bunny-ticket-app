@@ -1,6 +1,7 @@
 'use client'
 
-import { Home, RefreshCw, ShoppingBag } from 'lucide-react'
+import { Home, RefreshCw, ShoppingBag, Settings } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { TabType } from './MobileLayout'
 
 interface MobileNavBarProps {
@@ -8,13 +9,16 @@ interface MobileNavBarProps {
   onTabChange: (tab: TabType) => void
 }
 
-const tabs = [
-  { id: 'home' as TabType, icon: Home, label: 'Home' },
-  { id: 'convert' as TabType, icon: RefreshCw, label: 'Convert' },
-  { id: 'inventory' as TabType, icon: ShoppingBag, label: 'Inventory' },
-]
-
 export function MobileNavBar({ activeTab, onTabChange }: MobileNavBarProps) {
+  const t = useTranslations('navigation')
+
+  const tabs = [
+    { id: 'home' as TabType, icon: Home, label: t('home') },
+    { id: 'convert' as TabType, icon: RefreshCw, label: t('convert') },
+    { id: 'inventory' as TabType, icon: ShoppingBag, label: t('inventory') },
+    { id: 'settings' as TabType, icon: Settings, label: t('settings') },
+  ]
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[1000] px-5 pb-1 pt-4">
       <div

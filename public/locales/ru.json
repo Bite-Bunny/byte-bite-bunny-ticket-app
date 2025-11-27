@@ -1,6 +1,48 @@
 {
-  "i18n": {
-    "header": "Поддержка i18n",
-    "footer": "Вы можете выбрать другой язык в выпадающем меню."
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "tryAgain": "Попробовать снова"
+  },
+  "navigation": {
+    "home": "Главная",
+    "convert": "Конвертировать",
+    "inventory": "Инвентарь",
+    "settings": "Настройки"
+  },
+  "ticket": {
+    "price": "ЦЕНА",
+    "quality": "КАЧЕСТВО"
+  },
+  "ticketFeed": {
+    "previousTicket": "Предыдущий билет",
+    "nextTicket": "Следующий билет"
+  },
+  "websocket": {
+    "connected": "WebSocket подключен",
+    "disconnected": "WebSocket отключен",
+    "error": "Ошибка",
+    "lastMessage": "Последнее"
+  },
+  "user": {
+    "welcome": "Добро пожаловать в Bite Bunny!",
+    "loadingData": "Загрузка данных пользователя...",
+    "coins": "Монеты",
+    "copyRawData": "Копировать исходные данные"
+  },
+  "test": {
+    "title": "Тестовая страница",
+    "description": "Это временная тестовая страница для целей разработки."
+  },
+  "error": {
+    "title": "Произошла необработанная ошибка!",
+    "tryAgain": "Попробовать снова"
+  },
+  "app": {
+    "logoAlt": "Логотип Bite Bunny"
+  },
+  "settings": {
+    "title": "Настройки",
+    "language": "Язык"
   }
 }

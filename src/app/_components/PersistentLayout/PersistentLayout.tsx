@@ -17,6 +17,7 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
   const getInitialTab = (): TabType => {
     if (pathname === '/convert') return 'convert'
     if (pathname === '/inventory') return 'inventory'
+    if (pathname === '/settings') return 'settings'
     return 'home'
   }
 
@@ -27,6 +28,8 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
       setActiveTab('convert')
     } else if (pathname === '/inventory') {
       setActiveTab('inventory')
+    } else if (pathname === '/settings') {
+      setActiveTab('settings')
     } else {
       setActiveTab('home')
     }
@@ -43,6 +46,9 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
         break
       case 'inventory':
         router.push('/inventory')
+        break
+      case 'settings':
+        router.push('/settings')
         break
     }
   }

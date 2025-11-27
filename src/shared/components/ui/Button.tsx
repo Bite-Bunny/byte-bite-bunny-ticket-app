@@ -11,9 +11,22 @@ export const Button = ({
     type="button"
     ref={ref}
     className={cn(
-      'focus-visible:styled-outline bg-white/10 backdrop-blur-md border border-white/20 text-white/90 md:hover:bg-white/20 md:hover:border-white/30 focus:bg-white/20 focus:border-white/30 shadow-lg shadow-black/20 flex h-12 w-full items-center justify-center rounded-lg text-base font-medium disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-white/5',
+      'relative flex items-center justify-center',
+      'bg-white/10 backdrop-blur-[20px] border border-white/15',
+      'text-white/90 hover:text-white',
+      'hover:bg-white/15 hover:border-white/20',
+      'focus:bg-white/15 focus:border-white/20',
+      'shadow-[0_-8px_32px_rgba(0,0,0,0.3)]',
+      'disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-white/5 disabled:hover:bg-white/5',
+      'transition-all touch-manipulation',
+      'focus-visible:outline-none',
       className,
     )}
+    style={{
+      WebkitTapHighlightColor: 'transparent',
+      boxShadow:
+        '0 -8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+    }}
     {...props}
   >
     {children}

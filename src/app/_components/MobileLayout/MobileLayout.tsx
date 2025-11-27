@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { MobileNavBar } from './MobileNavBar'
 import Image from 'next/image'
 
-export type TabType = 'home' | 'convert' | 'inventory'
+export type TabType = 'home' | 'convert' | 'inventory' | 'settings'
 
 interface MobileLayoutProps {
   currentTab?: TabType
 }
 
 export function MobileLayout({ currentTab }: MobileLayoutProps) {
+  const t = useTranslations('app')
   const router = useRouter()
   const pathname = usePathname()
 
@@ -20,6 +22,7 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
     if (currentTab) return currentTab
     if (pathname === '/convert') return 'convert'
     if (pathname === '/inventory') return 'inventory'
+    if (pathname === '/settings') return 'settings'
     return 'home'
   }
 
@@ -33,6 +36,8 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
         setActiveTab('convert')
       } else if (pathname === '/inventory') {
         setActiveTab('inventory')
+      } else if (pathname === '/settings') {
+        setActiveTab('settings')
       } else {
         setActiveTab('home')
       }
@@ -50,6 +55,9 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
         break
       case 'inventory':
         router.push('/inventory')
+        break
+      case 'settings':
+        router.push('/settings')
         break
     }
   }
@@ -70,7 +78,7 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
         <div className="flex justify-center items-center px-5 py-[10px] flex-shrink-0 max-sm:px-5 max-sm:py-[50px] max-sm:pb-[30px] max-h-667:px-5 max-h-667:py-10 max-h-667:pb-5">
           <Image
             src="/logo.svg"
-            alt="Bite Bunny Logo"
+            alt={t('logoAlt')}
             width={99}
             height={20}
             className="brightness-0 invert opacity-90"

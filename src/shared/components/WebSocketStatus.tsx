@@ -1,8 +1,10 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useWebSocket } from '@/shared/hooks/useWebSocket'
 
 export default function WebSocketStatus() {
+  const t = useTranslations('websocket')
   const { isConnected, lastMessage, error } = useWebSocket()
 
   return (
@@ -14,18 +16,18 @@ export default function WebSocketStatus() {
             : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
         }`}
       >
-        {isConnected ? 'WebSocket Connected' : 'WebSocket Disconnected'}
+        {isConnected ? t('connected') : t('disconnected')}
       </div>
 
       {error && (
         <div className="mt-2 px-3 py-1 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded text-xs">
-          Error: {error.type}
+          {t('error')}: {error.type}
         </div>
       )}
 
       {lastMessage && (
         <div className="mt-2 px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded text-xs max-w-xs">
-          Last: {lastMessage.type}
+          {t('lastMessage')}: {lastMessage.type}
         </div>
       )}
     </div>
