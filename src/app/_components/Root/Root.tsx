@@ -6,6 +6,7 @@ import { useDidMount } from '@/shared/hooks/useDidMount'
 
 import { ErrorBoundary } from '../ErrorBoundary'
 import { ErrorPage } from '../ErrorPage'
+import { Loading } from '../Loading'
 
 export function Root(props: PropsWithChildren) {
   // Unfortunately, Telegram Mini Apps does not allow us to use all features of
@@ -16,8 +17,6 @@ export function Root(props: PropsWithChildren) {
   return didMount ? (
     <ErrorBoundary fallback={ErrorPage}>{props.children}</ErrorBoundary>
   ) : (
-    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-      Loading
-    </div>
+    <Loading />
   )
 }
