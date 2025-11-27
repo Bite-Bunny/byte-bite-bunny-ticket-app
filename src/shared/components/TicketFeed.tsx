@@ -281,7 +281,6 @@ interface TicketSlideProps {
 
 const TicketSlide = ({
   ticket,
-  index,
   isActive,
   isDragging = false,
 }: TicketSlideProps) => {
