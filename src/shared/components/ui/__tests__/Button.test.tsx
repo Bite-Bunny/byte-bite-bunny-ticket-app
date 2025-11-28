@@ -27,7 +27,7 @@ describe('Button', () => {
   it('should be disabled when disabled prop is true', () => {
     render(<Button disabled>Disabled</Button>)
     const button = screen.getByRole('button', { name: /disabled/i })
-    expect(button?.getAttribute('disabled')).toBeTruthy()
+    expect(button.hasAttribute('disabled')).toBe(true)
   })
 
   it('should not call onClick when disabled', async () => {
