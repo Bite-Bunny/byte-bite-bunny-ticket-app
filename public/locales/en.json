@@ -45,6 +45,9 @@
     "title": "Settings",
     "language": "Language"
   },
+  "inventory": {
+    "title": "Tickets"
+  },
   "notFound": {
     "title": "Page not found",
     "message": "Sorry, we couldn't find the page you are looking for",
