@@ -1,16 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
-import { useRawInitData } from '@telegram-apps/sdk-react'
-import { fetchMe } from '@/core/api'
+import { useUser } from './api/useUser'
 
+/**
+ * @deprecated Use `useUser` from '@/shared/hooks/api/useUser' instead
+ * This hook is kept for backward compatibility
+ */
 const useMe = () => {
-  const initRaw = useRawInitData()
-
-  return useQuery({
-    queryKey: ['me', initRaw],
-    queryFn: fetchMe,
-    enabled: !!initRaw,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  })
+  return useUser()
 }
 
 export default useMe
