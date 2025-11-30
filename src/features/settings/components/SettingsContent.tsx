@@ -1,12 +1,13 @@
 'use client'
 
 import { useTranslations, useLocale } from 'next-intl'
-import { useState, useTransition } from 'react'
-import { Settings, Globe } from 'lucide-react'
+import { useTransition } from 'react'
+import { Settings, Globe, TestTube } from 'lucide-react'
 import { setLocale } from '@/core/i18n/locale'
 import { localesMap } from '@/core/i18n/config'
 import type { Locale } from '@/core/i18n/types'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/shared/components/ui/Button'
 
 export default function SettingsContent() {
   const t = useTranslations('settings')
@@ -77,6 +78,22 @@ export default function SettingsContent() {
               )
             })}
           </div>
+        </div>
+
+        {/* Development Section */}
+        <div className="bg-white/10 backdrop-blur-[20px] rounded-2xl p-5 border border-white/15 shadow-lg">
+          <div className="flex items-center gap-3 mb-4">
+            <TestTube className="text-white/90" size={20} />
+            <h2 className="text-lg font-medium text-white/90">Development</h2>
+          </div>
+
+          <Button
+            onClick={() => router.push('/test')}
+            className="w-full px-4 py-3 text-sm flex items-center justify-center gap-2"
+          >
+            <TestTube size={18} />
+            <span>View Test Page</span>
+          </Button>
         </div>
       </div>
     </div>
