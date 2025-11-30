@@ -1,0 +1,240 @@
+import { useEffect, useRef, useState } from 'react'
+import { PanInfo } from 'framer-motion'
+import { TicketData } from '../types'
+
+interface UseTicketScrollProps {
+  tickets: TicketData[]
+  containerRef: React.RefObject<HTMLDivElement>
+}
+
+interface UseTicketScrollReturn {
+  currentIndex: number
+  isDragging: boolean
+  scrollToIndex: (index: number) => void
+  scrollNext: () => void
+  scrollPrevious: () => void
+  handleDragStart: () => void
+  handleDrag: (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void
+  handleDragEnd: (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+  ) => void
+}
+
+export const useTicketScroll = ({
+  tickets,
+  containerRef,
+}: UseTicketScrollProps): UseTicketScrollReturn => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartScroll = useRef(0)
+  const isScrollingRef = useRef(false)
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Handle scroll to snap to nearest ticket
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const handleScroll = () => {
+      if (isDragging || isScrollingRef.current) return // Don't update during drag or smooth scroll
+
+      const scrollTop = container.scrollTop
+      const itemHeight = container.clientHeight
+      const newIndex = Math.round(scrollTop / itemHeight)
+
+      // Only update if we're close enough to the target position (within 5px)
+      const targetScroll = newIndex * itemHeight
+      const distance = Math.abs(scrollTop - targetScroll)
+
+      if (distance < 5) {
+        setCurrentIndex(newIndex)
+      }
+    }
+
+    container.addEventListener('scroll', handleScroll, { passive: true })
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [isDragging, containerRef])
+
+  // Smooth scroll to specific index
+  const scrollToIndex = (index: number) => {
+    const container = containerRef.current
+    if (!container) return
+
+    const itemHeight = container.clientHeight
+    const targetScroll = index * itemHeight
+
+    // Clear any existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current)
+    }
+
+    // Mark as scrolling to prevent premature index updates
+    isScrollingRef.current = true
+
+    container.scrollTo({
+      top: targetScroll,
+      behavior: 'smooth',
+    })
+
+    // Use requestAnimationFrame to detect when scroll animation completes
+    let lastScrollTop = container.scrollTop
+    let frameCount = 0
+    const maxFrames = 60 // ~1 second at 60fps
+
+    const checkScrollComplete = () => {
+      const currentScrollTop = container.scrollTop
+      frameCount++
+
+      // If scroll position hasn't changed significantly, consider it complete
+      if (
+        Math.abs(currentScrollTop - lastScrollTop) < 1 ||
+        frameCount >= maxFrames
+      ) {
+        isScrollingRef.current = false
+        const finalScroll = container.scrollTop
+        const finalIndex = Math.round(finalScroll / itemHeight)
+        setCurrentIndex(finalIndex)
+      } else {
+        lastScrollTop = currentScrollTop
+        requestAnimationFrame(checkScrollComplete)
+      }
+    }
+
+    // Start checking after a short delay to allow scroll to begin
+    scrollTimeoutRef.current = setTimeout(() => {
+      requestAnimationFrame(checkScrollComplete)
+    }, 50)
+  }
+
+  // Navigate to next ticket
+  const scrollNext = () => {
+    if (currentIndex < tickets.length - 1) {
+      scrollToIndex(currentIndex + 1)
+    }
+  }
+
+  // Navigate to previous ticket
+  const scrollPrevious = () => {
+    if (currentIndex > 0) {
+      scrollToIndex(currentIndex - 1)
+    }
+  }
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  // Handle wheel events for smooth scrolling
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    let wheelScrolling = false
+
+    const handleWheel = (e: WheelEvent) => {
+      if (isDragging || isScrollingRef.current) return // Don't handle wheel during drag or smooth scroll
+      e.preventDefault()
+
+      if (wheelScrolling) return
+      wheelScrolling = true
+
+      const delta = e.deltaY
+      const itemHeight = container.clientHeight
+      const currentScroll = container.scrollTop
+      const currentIndex = Math.round(currentScroll / itemHeight)
+
+      let newIndex = currentIndex
+      if (delta > 0 && currentIndex < tickets.length - 1) {
+        newIndex = currentIndex + 1
+      } else if (delta < 0 && currentIndex > 0) {
+        newIndex = currentIndex - 1
+      }
+
+      scrollToIndex(newIndex)
+
+      setTimeout(() => {
+        wheelScrolling = false
+      }, 600)
+    }
+
+    container.addEventListener('wheel', handleWheel, { passive: false })
+    return () => container.removeEventListener('wheel', handleWheel)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tickets.length, isDragging, containerRef])
+
+  // Handle drag gesture
+  const handleDragStart = () => {
+    setIsDragging(true)
+    const container = containerRef.current
+    if (container) {
+      dragStartScroll.current = container.scrollTop
+    }
+  }
+
+  const handleDrag = (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+  ) => {
+    const container = containerRef.current
+    if (!container) return
+
+    // Apply drag to scroll position (inverse because dragging down should scroll down)
+    const newScroll = dragStartScroll.current - info.offset.y
+    const maxScroll = (tickets.length - 1) * container.clientHeight
+    container.scrollTop = Math.max(0, Math.min(newScroll, maxScroll))
+  }
+
+  const handleDragEnd = (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+  ) => {
+    setIsDragging(false)
+    const container = containerRef.current
+    if (!container) return
+
+    const itemHeight = container.clientHeight
+    const currentScroll = container.scrollTop
+    const currentIndex = Math.round(currentScroll / itemHeight)
+    const velocity = info.velocity.y
+
+    // Determine target index based on drag distance and velocity
+    let targetIndex = currentIndex
+    const dragDistance = -info.offset.y
+    const threshold = itemHeight * 0.25 // 25% of screen height
+
+    if (Math.abs(velocity) > 400) {
+      // Fast swipe - go to next/previous based on velocity direction
+      if (velocity < 0 && currentIndex < tickets.length - 1) {
+        targetIndex = currentIndex + 1
+      } else if (velocity > 0 && currentIndex > 0) {
+        targetIndex = currentIndex - 1
+      }
+    } else if (Math.abs(dragDistance) > threshold) {
+      // Slow drag but past threshold
+      if (dragDistance > 0 && currentIndex < tickets.length - 1) {
+        targetIndex = currentIndex + 1
+      } else if (dragDistance < 0 && currentIndex > 0) {
+        targetIndex = currentIndex - 1
+      }
+    }
+
+    scrollToIndex(targetIndex)
+  }
+
+  return {
+    currentIndex,
+    isDragging,
+    scrollToIndex,
+    scrollNext,
+    scrollPrevious,
+    handleDragStart,
+    handleDrag,
+    handleDragEnd,
+  }
+}

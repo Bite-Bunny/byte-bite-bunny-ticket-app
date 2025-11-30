@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import TelegramProvider from '@/shared/components/TelegramProvider'
-import { TicketFeedWithData } from '@/shared/components/TicketFeed'
+import { TicketFeedWithData } from '@/features/ticket-feed'
 
 export default function HomeContent() {
   const t = useTranslations('common')
