@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { Link } from './_components/Link/Link'
+import { Link } from '@/shared/components/Link/Link'
 import { Button } from '@/shared/components/ui/Button'
 
 export default function NotFound() {

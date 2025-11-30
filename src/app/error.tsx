@@ -1,5 +1,5 @@
 'use client'
 
-import { ErrorPage } from './_components/ErrorPage'
+import { ErrorPage } from '@/shared/components/ErrorPage'
 
 export default ErrorPage

@@ -3,10 +3,10 @@ import type { Metadata, Viewport } from 'next'
 import { getLocale } from 'next-intl/server'
 
 import 'normalize.css/normalize.css'
-import './_assets/globals.css'
-import { Root } from './_components/Root/Root'
-import { PersistentLayout } from './_components/PersistentLayout'
-import Providers from './_components/Providers'
+import './globals.css'
+import { Root } from '@/shared/components/Root/Root'
+import { PersistentLayout } from '@/shared/components/PersistentLayout'
+import Providers from '@/shared/components/Providers'
 import { I18nProvider } from '@/core/i18n/provider'
 
 export const metadata: Metadata = {
