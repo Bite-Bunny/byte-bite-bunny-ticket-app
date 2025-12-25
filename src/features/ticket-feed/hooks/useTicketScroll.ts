@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { PanInfo } from 'framer-motion'
 import { TicketData } from '../types'
+import {
+  SCROLL_POSITION_THRESHOLD,
+  MAX_SCROLL_ANIMATION_FRAMES,
+  SCROLL_COMPLETION_THRESHOLD,
+  SCROLL_COMPLETION_CHECK_DELAY,
+  WHEEL_SCROLL_TIMEOUT,
+  FAST_SWIPE_VELOCITY_THRESHOLD,
+  DRAG_DISTANCE_THRESHOLD,
+} from '../config'
 
 interface UseTicketScrollProps {
   tickets: TicketData[]
@@ -43,11 +52,11 @@ export const useTicketScroll = ({
       const itemHeight = container.clientHeight
       const newIndex = Math.round(scrollTop / itemHeight)
 
-      // Only update if we're close enough to the target position (within 5px)
+      // Only update if we're close enough to the target position
       const targetScroll = newIndex * itemHeight
       const distance = Math.abs(scrollTop - targetScroll)
 
-      if (distance < 5) {
+      if (distance < SCROLL_POSITION_THRESHOLD) {
         setCurrentIndex(newIndex)
       }
     }
@@ -80,7 +89,6 @@ export const useTicketScroll = ({
     // Use requestAnimationFrame to detect when scroll animation completes
     let lastScrollTop = container.scrollTop
     let frameCount = 0
-    const maxFrames = 60 // ~1 second at 60fps
 
     const checkScrollComplete = () => {
       const currentScrollTop = container.scrollTop
@@ -88,8 +96,9 @@ export const useTicketScroll = ({
 
       // If scroll position hasn't changed significantly, consider it complete
       if (
-        Math.abs(currentScrollTop - lastScrollTop) < 1 ||
-        frameCount >= maxFrames
+        Math.abs(currentScrollTop - lastScrollTop) <
+          SCROLL_COMPLETION_THRESHOLD ||
+        frameCount >= MAX_SCROLL_ANIMATION_FRAMES
       ) {
         isScrollingRef.current = false
         const finalScroll = container.scrollTop
@@ -104,7 +113,7 @@ export const useTicketScroll = ({
     // Start checking after a short delay to allow scroll to begin
     scrollTimeoutRef.current = setTimeout(() => {
       requestAnimationFrame(checkScrollComplete)
-    }, 50)
+    }, SCROLL_COMPLETION_CHECK_DELAY)
   }
 
   // Navigate to next ticket
@@ -160,7 +169,7 @@ export const useTicketScroll = ({
 
       setTimeout(() => {
         wheelScrolling = false
-      }, 600)
+      }, WHEEL_SCROLL_TIMEOUT)
     }
 
     container.addEventListener('wheel', handleWheel, { passive: false })
@@ -206,9 +215,9 @@ export const useTicketScroll = ({
     // Determine target index based on drag distance and velocity
     let targetIndex = currentIndex
     const dragDistance = -info.offset.y
-    const threshold = itemHeight * 0.25 // 25% of screen height
+    const threshold = itemHeight * DRAG_DISTANCE_THRESHOLD
 
-    if (Math.abs(velocity) > 400) {
+    if (Math.abs(velocity) > FAST_SWIPE_VELOCITY_THRESHOLD) {
       // Fast swipe - go to next/previous based on velocity direction
       if (velocity < 0 && currentIndex < tickets.length - 1) {
         targetIndex = currentIndex + 1
