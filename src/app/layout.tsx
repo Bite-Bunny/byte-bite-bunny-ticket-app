@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body>
+      <body id="root">
         <I18nProvider>
           <Root>
             <PersistentLayout>

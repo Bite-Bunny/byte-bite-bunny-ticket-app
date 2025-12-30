@@ -39,7 +39,13 @@ export default function InventoryContent() {
       {/* Grid - responsive: 2 columns on mobile, 3 on tablet, 4+ on desktop */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-5 w-full pb-24 md:pb-28 max-w-7xl mx-auto">
         {groupedInventoryItems.map((item, index) => (
-          <InventoryItemCard key={item.type} item={item} index={index} />
+          <InventoryItemCard
+            key={item.type}
+            item={item}
+            index={index}
+            isPreview={true}
+            previewUrl="/inventory/preview"
+          />
         ))}
       </div>
     </div>
