@@ -6,6 +6,7 @@ import { TonConnectUIProvider } from '@tonconnect/ui-react'
 import { getQueryClient } from '@/shared/lib/query-client'
 import { useTelegramLocale } from '@/shared/hooks/useTelegramLocale'
 import WebSocketProvider from '@/shared/components/WebSocketProvider'
+import { ModelPreloader } from '@/shared/components/ModelPreloader'
 
 const Providers = ({ children }: PropsWithChildren) => {
   // Automatically set locale from Telegram if no manual preference exists
@@ -16,7 +17,9 @@ const Providers = ({ children }: PropsWithChildren) => {
   return (
     <QueryClientProvider client={queryClient}>
       <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
-        <WebSocketProvider>{children}</WebSocketProvider>
+        <ModelPreloader>
+          <WebSocketProvider>{children}</WebSocketProvider>
+        </ModelPreloader>
       </TonConnectUIProvider>
     </QueryClientProvider>
   )

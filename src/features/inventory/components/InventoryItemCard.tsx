@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Ticket } from '@/shared/components/Ticket'
 import { useHoverSupport } from '@/shared/hooks/useHoverSupport'
@@ -10,23 +10,37 @@ import {
   itemGlowColors,
   BASE_ROTATION,
 } from '../config/inventory.config'
+import { useRouter } from 'next/navigation'
 
 interface InventoryItemCardProps {
   item: GroupedInventoryItem
   index: number
+  isPreview?: boolean
+  previewUrl?: string
 }
 
-export function InventoryItemCard({ item, index }: InventoryItemCardProps) {
+export function InventoryItemCard({
+  item,
+  index,
+  isPreview = false,
+  previewUrl,
+}: InventoryItemCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const supportsHover = useHoverSupport()
   const glowColor = itemGlowColors[item.type]
   const variant =
     typeToVariant[item.type as Exclude<InventoryItemType, 'carrot'>]
   const shouldShowHover = isHovered && supportsHover
-  const showCount = item.count > 1
+  const showCount = useMemo(() => item.count > 1, [item.count])
+  const router = useRouter()
 
   return (
     <motion.div
+      onClick={() => {
+        if (isPreview && previewUrl) {
+          router.push(previewUrl)
+        }
+      }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
