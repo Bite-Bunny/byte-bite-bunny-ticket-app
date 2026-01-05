@@ -134,6 +134,14 @@ Check out
 the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for
 more details.
 
+## Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) directory:
+
+- **[3D Model Rendering Guide](./docs/3D-MODELS.md)** - Complete guide to working with 3D models
+- **[Architecture Overview](./docs/ARCHITECTURE.md)** - Application structure and design patterns
+- **[Data Fetching Guide](./DATA_FETCHING_GUIDE.md)** - API integration and data management
+
 ## Useful Links
 
 - [Platform documentation](https://docs.telegram-mini-apps.com/)

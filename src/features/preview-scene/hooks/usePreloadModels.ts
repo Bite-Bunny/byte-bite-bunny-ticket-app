@@ -6,10 +6,10 @@ import { getCachedModel } from '@/shared/lib/cache-model'
 
 /**
  * Hook to preload multiple 3D models efficiently
- * 
+ *
  * @param modelPaths - Array of paths to 3D model files (GLB/GLTF)
  * @returns Object with loading state and preloaded status for each model
- * 
+ *
  * @example
  * ```tsx
  * const { isLoading, preloadedModels } = usePreloadModels([
@@ -47,4 +47,3 @@ export function usePreloadModels(modelPaths: string[]) {
 
   return { isLoading, preloadedModels }
 }
-
