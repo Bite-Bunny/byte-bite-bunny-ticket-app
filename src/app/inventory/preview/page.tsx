@@ -4,16 +4,16 @@ import * as THREE from 'three'
 import React, { useRef, useMemo, Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
-import { modelPreloader } from '@/shared/lib/model-preloader'
+import { MODEL_PATHS } from '@/shared/lib/models.constants'
 import '@/css/preview.css'
 
 // Preload model using drei's system for better integration
-useGLTF.preload('/models/regular-case.glb')
+useGLTF.preload(MODEL_PATHS.REGULAR_CASE)
 
 function Model() {
   const modelRef = useRef<THREE.Group>(null!)
   // Use drei's useGLTF which automatically uses preloaded model if available
-  const { scene } = useGLTF('/models/regular-case.glb')
+  const { scene } = useGLTF(MODEL_PATHS.REGULAR_CASE)
 
   // Clone and prepare the scene
   const clonedScene = useMemo(() => {
