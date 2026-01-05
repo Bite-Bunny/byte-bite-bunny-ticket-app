@@ -40,3 +40,12 @@ export const DEFAULT_CONTROLS_CONFIG: ControlsConfig = {
  * Model scaling configuration
  */
 export const MODEL_SCALE_FACTOR = 2 // Scale to fit in a 2-unit space
+
+/**
+ * Default animation configuration
+ */
+export const DEFAULT_ANIMATION_CONFIG = {
+  autoPlay: false,
+  speed: 1,
+  loop: true,
+} as const

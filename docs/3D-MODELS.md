@@ -29,6 +29,7 @@ The application uses a robust 3D model rendering system built on top of:
 - ✅ **Dual caching system** - Custom cache + drei cache for optimal performance
 - ✅ **Automatic model centering and scaling** - Models are automatically positioned correctly
 - ✅ **Interactive controls** - Users can rotate, zoom, and pan models
+- ✅ **Animation support** - Play animations from Blender-exported GLB/GLTF files
 - ✅ **Preloading support** - Preload models for instant loading
 - ✅ **Type-safe** - Full TypeScript support
 - ✅ **Reusable components** - Easy to use in any part of the application
@@ -94,6 +95,26 @@ function MyComponent() {
       modelPath="/models/regular-case.glb"
       fallback={<div>Loading 3D model...</div>}
       className="w-full h-[600px] rounded-lg shadow-xl"
+    />
+  )
+}
+```
+
+#### With Animation
+
+```tsx
+import { PreviewScene } from '@/features/preview-scene'
+
+function AnimatedComponent() {
+  return (
+    <PreviewScene
+      modelPath="/models/animated-model.glb"
+      animation={{
+        autoPlay: true,  // Start animation automatically
+        loop: true,      // Loop the animation
+        speed: 1,        // Normal speed (1 = normal, 2 = double, 0.5 = half)
+        name: 'Idle'     // Optional: specify animation name
+      }}
     />
   )
 }
@@ -179,6 +200,47 @@ function MyComponent() {
 - Preload models before navigating to a preview page
 - Preload on hover/focus for better UX
 - Preload critical models early in the app lifecycle
+
+---
+
+### useModelAnimations
+
+Discover available animations in a 3D model. Useful when you don't know animation names.
+
+#### Signature
+
+```tsx
+function useModelAnimations(modelPath: string): string[]
+```
+
+#### Example
+
+```tsx
+import { useModelAnimations } from '@/features/preview-scene'
+
+function AnimationDiscovery() {
+  const animations = useModelAnimations('/models/character.glb')
+  
+  // animations = ['Idle', 'Wave', 'Jump', 'Run']
+  
+  return (
+    <div>
+      <p>Available animations:</p>
+      <ul>
+        {animations.map((name) => (
+          <li key={name}>{name}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+```
+
+#### When to Use
+
+- Debug which animations are available in a model
+- Build UI to let users select animations
+- Verify animation names match your expectations
 
 ---
 
@@ -396,6 +458,161 @@ To customize these settings, modify the config file or create your own `Canvas` 
 
 ---
 
+## Animation Support
+
+### Overview
+
+The preview-scene feature supports animations from Blender-exported GLB/GLTF files. Animations can be played automatically on load or controlled programmatically.
+
+### Animation Configuration
+
+```tsx
+interface AnimationConfig {
+  autoPlay?: boolean  // Auto-play animation when model loads (default: false)
+  name?: string       // Animation name to play (uses first animation if not specified)
+  speed?: number      // Playback speed (1 = normal, 2 = double, 0.5 = half) (default: 1)
+  loop?: boolean      // Loop animation (default: true)
+}
+```
+
+### Basic Animation Examples
+
+#### Auto-play All Animations (No Name Needed)
+
+**You don't need to know animation names!** If you omit the `name` property, it will automatically play **ALL available animations simultaneously**.
+
+```tsx
+<PreviewScene
+  modelPath="/models/animated-model.glb"
+  animation={{ autoPlay: true }}
+/>
+// Plays ALL animations found in the model at the same time
+```
+
+This is perfect when:
+- You don't know the animation names
+- Your model has multiple animations and you want them all to play
+- You want to play whatever animations are available
+- Animations don't have names (common with Blender exports)
+
+#### Play Specific Animation
+
+```tsx
+<PreviewScene
+  modelPath="/models/animated-model.glb"
+  animation={{
+    autoPlay: true,
+    name: 'Wave',  // Play animation named "Wave"
+    loop: true,
+    speed: 1.5     // Play at 1.5x speed
+  }}
+/>
+```
+
+#### Control Animation Speed
+
+```tsx
+<PreviewScene
+  modelPath="/models/animated-model.glb"
+  animation={{
+    autoPlay: true,
+    speed: 0.5,  // Play at half speed
+    loop: true
+  }}
+/>
+```
+
+#### Play Once (No Loop)
+
+```tsx
+<PreviewScene
+  modelPath="/models/animated-model.glb"
+  animation={{
+    autoPlay: true,
+    loop: false  // Play once and stop
+  }}
+/>
+```
+
+### Working with Multiple Animations
+
+If your Blender model has multiple animations, you can switch between them by changing the `name` property:
+
+```tsx
+import { useState } from 'react'
+import { PreviewScene } from '@/features/preview-scene'
+
+function AnimationSelector() {
+  const [currentAnimation, setCurrentAnimation] = useState('Idle')
+
+  const animations = ['Idle', 'Wave', 'Jump', 'Run']
+
+  return (
+    <div>
+      <PreviewScene
+        modelPath="/models/character.glb"
+        animation={{
+          autoPlay: true,
+          name: currentAnimation,
+          loop: true
+        }}
+      />
+      
+      <div className="flex gap-2 mt-4">
+        {animations.map((anim) => (
+          <button
+            key={anim}
+            onClick={() => setCurrentAnimation(anim)}
+            className={currentAnimation === anim ? 'active' : ''}
+          >
+            {anim}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### Notes
+
+- **Animations only work if the GLB/GLTF file contains animation data**
+- **If no animations are present in the model, the component will render normally without errors**
+- **Animation names are optional** - If you don't specify a name, **ALL available animations will play simultaneously**
+- **All animations share the same speed and loop settings** - You can't configure them individually yet
+- **Animation names must match exactly with the names exported from Blender** (if you specify a name)
+- If an animation name is not found, a warning is logged to the console with available animation names
+- **Playing all animations** is useful when:
+  - Your model has multiple unnamed animations (common with Blender)
+  - You want to see all animations at once
+  - You don't know which specific animation to play
+
+### How Blender Animations Work
+
+In Blender, animations are created as **Actions** (also called Animation Data). When you export to GLB/GLTF:
+
+1. **Each animation action gets a name** - Usually the name you gave it in Blender's Action Editor
+2. **Default names** - If you didn't name them, Blender might use default names like "Action" or "Action.001"
+3. **Multiple animations** - A single model can have multiple named animations
+
+#### Finding Animation Names
+
+You can discover animation names in several ways:
+
+1. **Use the hook:**
+```tsx
+import { useModelAnimations } from '@/features/preview-scene'
+
+const animations = useModelAnimations('/models/character.glb')
+console.log(animations) // ['Idle', 'Wave', 'Jump']
+```
+
+2. **Check the console** - If you try to play a non-existent animation, the console will warn you and list available names
+
+3. **Check Blender** - In Blender, open the Action Editor and look at action names before exporting
+
+4. **Just omit the name** - The code will automatically use the first animation!
+
 ## Examples
 
 ### Example 1: Simple Preview Page
@@ -578,6 +795,59 @@ function CustomPreview() {
         autoRotateSpeed={1}
       />
     </Canvas>
+  )
+}
+```
+
+### Example 6: Animated Model with Controls
+
+```tsx
+'use client'
+
+import { useState } from 'react'
+import { PreviewScene } from '@/features/preview-scene'
+
+export default function AnimatedPreviewPage() {
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [speed, setSpeed] = useState(1)
+
+  return (
+    <div className="w-full h-screen flex flex-col">
+      {/* 3D Preview with Animation */}
+      <div className="flex-1">
+        <PreviewScene
+          modelPath="/models/animated-character.glb"
+          animation={{
+            autoPlay: isPlaying,
+            loop: true,
+            speed: speed,
+          }}
+        />
+      </div>
+
+      {/* Controls */}
+      <div className="p-4 bg-gray-100 flex gap-4 items-center">
+        <button
+          onClick={() => setIsPlaying(!isPlaying)}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          {isPlaying ? 'Pause' : 'Play'}
+        </button>
+
+        <label className="flex items-center gap-2">
+          Speed:
+          <input
+            type="range"
+            min="0.25"
+            max="2"
+            step="0.25"
+            value={speed}
+            onChange={(e) => setSpeed(parseFloat(e.target.value))}
+          />
+          <span>{speed}x</span>
+        </label>
+      </div>
+    </div>
   )
 }
 ```

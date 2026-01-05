@@ -24,6 +24,7 @@ export default function PreviewScene({
   modelPath,
   fallback = null,
   className = 'w-full h-full relative',
+  animation,
 }: PreviewSceneProps) {
   return (
     <div className={className}>
@@ -46,7 +47,7 @@ export default function PreviewScene({
             position={DEFAULT_LIGHTING_CONFIG.point.position}
             intensity={DEFAULT_LIGHTING_CONFIG.point.intensity}
           />
-          <Model3D modelPath={modelPath} />
+          <Model3D modelPath={modelPath} animation={animation} />
           <OrbitControls
             enableZoom={DEFAULT_CONTROLS_CONFIG.enableZoom}
             enablePan={DEFAULT_CONTROLS_CONFIG.enablePan}
