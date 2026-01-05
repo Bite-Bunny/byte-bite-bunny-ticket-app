@@ -20,6 +20,10 @@ export interface PreviewSceneProps {
    * If not provided, animations won't be played
    */
   animation?: AnimationConfig
+  /**
+   * Callback to receive animation controls for programmatic control
+   */
+  onAnimationControlsReady?: (controls: AnimationControls) => void
 }
 
 export interface AnimationConfig {
@@ -45,6 +49,40 @@ export interface AnimationConfig {
    * @default true
    */
   loop?: boolean
+  /**
+   * Whether to hold animations at the last frame when they finish or are stopped
+   * When true, animations will stay at the end state (e.g., chest stays open)
+   * When false, animations will reset to the beginning state when stopped
+   * @default false
+   */
+  holdAtEnd?: boolean
+}
+
+/**
+ * Animation control methods for programmatic control
+ */
+export interface AnimationControls {
+  /**
+   * Play all animations (or the specified animation if name was provided)
+   */
+  play: () => void
+  /**
+   * Stop animations and optionally hold at the end
+   * @param seekToEnd - If true, immediately seek to the last frame before stopping
+   */
+  stop: (seekToEnd?: boolean) => void
+  /**
+   * Pause animations at current frame
+   */
+  pause: () => void
+  /**
+   * Reset animations to the beginning
+   */
+  reset: () => void
+  /**
+   * Get whether animations are currently playing
+   */
+  isPlaying: () => boolean
 }
 
 export interface CameraConfig {
