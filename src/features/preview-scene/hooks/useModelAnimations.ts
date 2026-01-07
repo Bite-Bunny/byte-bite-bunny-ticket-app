@@ -27,4 +27,3 @@ export function useModelAnimations(modelPath: string): string[] {
 
   return animationNames
 }
-
