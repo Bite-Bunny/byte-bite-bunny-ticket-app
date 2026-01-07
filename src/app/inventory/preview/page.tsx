@@ -19,6 +19,14 @@ export default function PreviewPage() {
     animationControls?.stop(true)
   }
 
+  const handlePlay = () => {
+    animationControls?.play()
+  }
+
+  const handleReset = () => {
+    animationControls?.reset()
+  }
+
   return (
     <div className="w-full h-full flex flex-col relative">
       <PreviewScene
@@ -45,18 +53,18 @@ export default function PreviewPage() {
             Stop
           </Button>
           <Button
-            onClick={() => animationControls?.reset()}
+            onClick={handleReset}
             className="px-4 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-medium rounded-xl"
             disabled={!animationControls}
           >
             Reset
           </Button>
           <Button
-            onClick={() => animationControls?.play()}
+            onClick={handlePlay}
             className="px-4 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-medium rounded-xl"
             disabled={!animationControls}
           >
-            Play Again
+            Play
           </Button>
         </Card>
       </div>

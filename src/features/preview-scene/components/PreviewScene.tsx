@@ -4,7 +4,7 @@ import React, { Suspense, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { Model3D, type Model3DRef } from './Model3D'
-import type { PreviewSceneProps, AnimationControls } from '../types'
+import type { PreviewSceneProps } from '../types'
 import {
   DEFAULT_CAMERA_CONFIG,
   DEFAULT_LIGHTING_CONFIG,
