@@ -1,5 +1,6 @@
 export { PreviewScene } from './components'
 export { Model3D } from './components'
+export type { Model3DRef } from './components'
 export * from './types'
 export * from './config'
 export * from './hooks'
