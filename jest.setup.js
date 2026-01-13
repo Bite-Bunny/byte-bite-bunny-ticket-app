@@ -38,4 +38,5 @@ jest.mock('next-intl', () => ({
 jest.mock('@telegram-apps/sdk-react', () => ({
   useRawInitData: jest.fn(() => null),
   retrieveRawInitData: jest.fn(() => null),
+  openLink: jest.fn(),
 }))
