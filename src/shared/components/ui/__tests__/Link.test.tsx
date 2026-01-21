@@ -22,22 +22,8 @@ jest.mock('next/link', () => {
 })
 
 describe('Link', () => {
-  let locationSpy: jest.SpyInstance
-
-  beforeAll(() => {
-    // Spy on location.toString() to return our mock URL
-    locationSpy = jest.spyOn(window.location, 'toString')
-    locationSpy.mockReturnValue('https://localhost:3000')
-  })
-
-  afterAll(() => {
-    locationSpy.mockRestore()
-  })
-
   beforeEach(() => {
     jest.clearAllMocks()
-    // Reset the mock return value before each test
-    locationSpy.mockReturnValue('https://localhost:3000')
   })
 
   it('should render link with children', () => {
