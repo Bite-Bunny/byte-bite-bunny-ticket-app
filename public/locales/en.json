@@ -52,5 +52,11 @@
     "title": "Page not found",
     "message": "Sorry, we couldn't find the page you are looking for",
     "goHome": "Go to Home"
+  },
+  "dailyCrate": {
+    "title": "Daily Crate",
+    "description": "Claim your daily reward and get amazing prizes!",
+    "claimButton": "Claim Now",
+    "crateAlt": "Daily crate"
   }
 }

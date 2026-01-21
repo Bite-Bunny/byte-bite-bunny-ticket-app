@@ -1,21 +1,27 @@
-'use client'
-
-import { useTranslations } from 'next-intl'
-import TelegramProvider from '@/shared/components/TelegramProvider'
+import { getTranslations } from 'next-intl/server'
 import { TicketFeedWithData } from '@/features/ticket-feed'
+import { showDailyCase, DailyCase } from '@/features/case'
 
-export default function HomeContent() {
-  const t = useTranslations('common')
+async function getDailyCase(): Promise<{
+  isClaimed: boolean
+  daysLeft: number
+}> {
+  // TODO: Some api fetch in feature Hayko jan
+
+  return {
+    isClaimed: false,
+    daysLeft: 2,
+  }
+}
+
+export default async function HomeContent() {
+  const t = await getTranslations('common')
+  const dailyCase = await getDailyCase()
 
   return (
-    <TelegramProvider
-      fallback={
-        <div className="flex items-center justify-center p-4">
-          {t('loading')}
-        </div>
-      }
-    >
+    <>
       <TicketFeedWithData count={30} />
-    </TelegramProvider>
+      {showDailyCase(dailyCase) && <DailyCase />}
+    </>
   )
 }
