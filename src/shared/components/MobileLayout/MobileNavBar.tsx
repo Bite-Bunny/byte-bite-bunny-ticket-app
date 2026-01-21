@@ -7,9 +7,16 @@ import { TabType } from './MobileLayout'
 interface MobileNavBarProps {
   activeTab: TabType
   onTabChange: (tab: TabType) => void
+  onTabHover?: (tab: TabType) => void
+  isPending?: boolean
 }
 
-export function MobileNavBar({ activeTab, onTabChange }: MobileNavBarProps) {
+export function MobileNavBar({
+  activeTab,
+  onTabChange,
+  onTabHover,
+  isPending = false,
+}: MobileNavBarProps) {
   const t = useTranslations('navigation')
 
   const tabs = [
@@ -35,12 +42,14 @@ export function MobileNavBar({ activeTab, onTabChange }: MobileNavBarProps) {
           return (
             <button
               key={tab.id}
-              className={`relative flex items-center justify-center bg-none border-none cursor-pointer px-5 py-4 rounded-[18px] min-w-[70px] touch-manipulation ${
+              className={`relative flex items-center justify-center bg-none border-none cursor-pointer px-5 py-4 rounded-[18px] min-w-[70px] touch-manipulation transition-all duration-200 ease-out ${
                 isActive
-                  ? 'bg-white/15 backdrop-blur-[10px] border border-white/10'
-                  : ''
-              }`}
+                  ? 'bg-white/15 backdrop-blur-[10px] border border-white/10 scale-100'
+                  : 'hover:bg-white/5 scale-100 active:scale-95'
+              } ${isPending && isActive ? 'opacity-90' : ''}`}
               onClick={() => onTabChange(tab.id)}
+              onMouseEnter={() => onTabHover?.(tab.id)}
+              onTouchStart={() => onTabHover?.(tab.id)}
               style={{
                 WebkitTapHighlightColor: 'transparent',
                 boxShadow: isActive
@@ -48,15 +57,17 @@ export function MobileNavBar({ activeTab, onTabChange }: MobileNavBarProps) {
                   : 'none',
               }}
             >
-              <div className="flex flex-col items-center gap-1.5 z-[1]">
+              <div className="flex flex-col items-center gap-1.5 z-[1] transition-all duration-200">
                 <Icon
                   size={24}
-                  className={`stroke-[1.5] drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
-                    isActive ? 'text-white' : 'text-white/90'
+                  className={`stroke-[1.5] drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all duration-200 ${
+                    isActive
+                      ? 'text-white scale-100'
+                      : 'text-white/90 scale-100'
                   }`}
                 />
                 <span
-                  className={`text-[11px] font-medium text-center tracking-[0.3px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
+                  className={`text-[11px] font-medium text-center tracking-[0.3px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all duration-200 ${
                     isActive ? 'text-white' : 'text-white/90'
                   }`}
                 >

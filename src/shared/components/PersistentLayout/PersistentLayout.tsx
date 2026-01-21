@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useTransition, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { MobileNavBar, TabType } from '../MobileLayout'
@@ -9,9 +9,17 @@ interface PersistentLayoutProps {
   children: React.ReactNode
 }
 
+const TAB_ROUTES: Record<TabType, string> = {
+  home: '/',
+  convert: '/convert',
+  inventory: '/inventory',
+  settings: '/settings',
+}
+
 export function PersistentLayout({ children }: PersistentLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
+  const [isPending, startTransition] = useTransition()
 
   // IMPORTANT: add all new routes to the array
   // Check if current route is a known route (not 404)
@@ -29,6 +37,13 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
 
   const [activeTab, setActiveTab] = useState<TabType>(getInitialTab)
 
+  // Prefetch all routes on mount for instant navigation
+  useEffect(() => {
+    Object.values(TAB_ROUTES).forEach((route) => {
+      router.prefetch(route)
+    })
+  }, [router])
+
   useEffect(() => {
     if (pathname === '/convert') {
       setActiveTab('convert')
@@ -41,23 +56,25 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
     }
   }, [pathname])
 
-  const handleTabChange = (tab: TabType) => {
-    setActiveTab(tab)
-    switch (tab) {
-      case 'home':
-        router.push('/')
-        break
-      case 'convert':
-        router.push('/convert')
-        break
-      case 'inventory':
-        router.push('/inventory')
-        break
-      case 'settings':
-        router.push('/settings')
-        break
-    }
-  }
+  const handleTabChange = useCallback(
+    (tab: TabType) => {
+      // Optimistic UI update - update tab state immediately
+      setActiveTab(tab)
+      // Use startTransition to make navigation non-blocking
+      startTransition(() => {
+        router.push(TAB_ROUTES[tab])
+      })
+    },
+    [router, startTransition],
+  )
+
+  const handleTabHover = useCallback(
+    (tab: TabType) => {
+      // Prefetch on hover for even faster navigation
+      router.prefetch(TAB_ROUTES[tab])
+    },
+    [router],
+  )
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 w-screen h-screen overflow-hidden flex flex-col z-[1]">
@@ -94,7 +111,12 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
         </div>
 
         {isKnownRoute && (
-          <MobileNavBar activeTab={activeTab} onTabChange={handleTabChange} />
+          <MobileNavBar
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            onTabHover={handleTabHover}
+            isPending={isPending}
+          />
         )}
       </div>
     </div>
