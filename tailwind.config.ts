@@ -21,6 +21,7 @@ const config: Config = {
           light: '#ab47bc',
           dark: '#6a1b9a',
         },
+        'background-gold': '#886403',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-background-gold: #886403;
+  }
+
   * {
     @apply box-border;
   }
@@ -24,7 +28,7 @@
         rgba(255, 9, 9, 0) 0%,
         rgba(255, 0, 0, 0.2) 100%
       ),
-      radial-gradient(at 58% 9%, #886403 0%, #000000 100%);
+      radial-gradient(at 58% 9%, var(--color-background-gold) 0%, #000000 100%);
     font-family:
       -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
