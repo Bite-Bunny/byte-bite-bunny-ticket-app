@@ -1,4 +1,4 @@
-export type DailyCase = {
+export type DailyCaseData = {
   isClaimed: boolean
   daysLeft: number
 }
