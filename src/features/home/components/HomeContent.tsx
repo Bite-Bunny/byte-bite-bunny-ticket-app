@@ -1,5 +1,6 @@
 import { TicketFeedWithData } from '@/features/ticket-feed'
 import { showDailyCase, DailyCase } from '@/features/case'
+import { CreditsNavigationButton } from './CreditsNavigationButton'
 
 async function getDailyCase(): Promise<{
   isClaimed: boolean
@@ -20,6 +21,7 @@ export default async function HomeContent() {
     <>
       <TicketFeedWithData count={30} />
       {showDailyCase(dailyCase) && <DailyCase />}
+      <CreditsNavigationButton />
     </>
   )
 }

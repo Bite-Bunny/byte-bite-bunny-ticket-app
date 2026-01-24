@@ -23,9 +23,13 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
 
   // IMPORTANT: add all new routes to the array
   // Check if current route is a known route (not 404)
-  const isKnownRoute = ['/', '/convert', '/inventory', '/settings'].includes(
-    pathname,
-  )
+  const isKnownRoute = [
+    '/',
+    '/convert',
+    '/inventory',
+    '/settings',
+    '/credits',
+  ].includes(pathname)
 
   // Initialize state based on current route to prevent blinking
   const getInitialTab = (): TabType => {

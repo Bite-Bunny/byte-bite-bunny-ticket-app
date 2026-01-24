@@ -58,5 +58,12 @@
     "description": "Получите ежедневную награду и удивительные призы!",
     "claimButton": "Забрать Сейчас",
     "crateAlt": "Ежедневный сундук"
+  },
+  "credits": {
+    "title": "Монеты",
+    "description": "Покупайте монеты используя Telegram Stars, чтобы разблокировать удивительные функции!",
+    "purchaseInfo": "Заплатите {stars} Stars, чтобы получить {credits} Монет",
+    "creditIconAlt": "Иконка монеты",
+    "purchaseCredits": "Купить Монеты"
   }
 }
