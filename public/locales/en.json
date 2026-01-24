@@ -64,6 +64,6 @@
     "description": "Purchase coins using Telegram Stars to unlock amazing features!",
     "purchaseInfo": "Pay {stars} Stars to receive {credits} Coins",
     "creditIconAlt": "Credit coin icon",
-    "purchaseCredits": "Purchase Coins"
+    "purchaseCredits": "Get Credits"
   }
 }
