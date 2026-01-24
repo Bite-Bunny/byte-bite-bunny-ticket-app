@@ -12,4 +12,4 @@ WORKDIR /app
 COPY --from=builder /app ./
 EXPOSE 3000
 RUN corepack enable pnpm
-CMD ["pnpm", "run", "start"]
+CMD ["pnpm", "start", "--", "-H", "0.0.0.0", "-p", "3000"]
