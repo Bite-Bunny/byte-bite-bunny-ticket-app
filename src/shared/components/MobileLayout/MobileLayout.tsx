@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { MobileNavBar } from './MobileNavBar'
 import Image from 'next/image'
 
-export type TabType = 'home' | 'convert' | 'inventory' | 'settings'
+export type TabType = 'home' | 'cases' | 'inventory' | 'settings'
 
 interface MobileLayoutProps {
   currentTab?: TabType
@@ -20,7 +20,7 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
   // Initialize state based on current route to prevent blinking
   const getInitialTab = (): TabType => {
     if (currentTab) return currentTab
-    if (pathname === '/convert') return 'convert'
+    if (pathname === '/cases') return 'cases'
     if (pathname === '/inventory') return 'inventory'
     if (pathname === '/settings') return 'settings'
     return 'home'
@@ -32,8 +32,8 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
     if (currentTab) {
       setActiveTab(currentTab)
     } else {
-      if (pathname === '/convert') {
-        setActiveTab('convert')
+      if (pathname === '/cases') {
+        setActiveTab('cases')
       } else if (pathname === '/inventory') {
         setActiveTab('inventory')
       } else if (pathname === '/settings') {
@@ -50,8 +50,8 @@ export function MobileLayout({ currentTab }: MobileLayoutProps) {
       case 'home':
         router.push('/')
         break
-      case 'convert':
-        router.push('/convert')
+      case 'cases':
+        router.push('/cases')
         break
       case 'inventory':
         router.push('/inventory')

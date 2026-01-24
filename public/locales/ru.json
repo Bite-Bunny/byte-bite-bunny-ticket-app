@@ -6,7 +6,7 @@
   },
   "navigation": {
     "home": "Главная",
-    "convert": "Конвертировать",
+    "cases": "Кейсы",
     "inventory": "Инвентарь",
     "settings": "Настройки"
   },
@@ -43,7 +43,14 @@
   },
   "settings": {
     "title": "Настройки",
-    "language": "Язык"
+    "language": "Язык",
+    "convert": "Конвертировать",
+    "convertButton": "Конвертировать Билеты"
+  },
+  "cases": {
+    "title": "Кейсы",
+    "creditIconAlt": "Иконка монеты",
+    "getCredits": "Купить Монеты"
   },
   "inventory": {
     "title": "Билеты"

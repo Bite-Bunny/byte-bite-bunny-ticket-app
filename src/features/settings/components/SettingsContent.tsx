@@ -2,7 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl'
 import { useTransition } from 'react'
-import { Settings, Globe, TestTube } from 'lucide-react'
+import { Settings, Globe, TestTube, RefreshCw } from 'lucide-react'
 import { setLocale } from '@/core/i18n/locale'
 import { localesMap } from '@/core/i18n/config'
 import type { Locale } from '@/core/i18n/types'
@@ -78,6 +78,24 @@ export default function SettingsContent() {
               )
             })}
           </div>
+        </div>
+
+        {/* Convert Section */}
+        <div className="bg-white/10 backdrop-blur-[20px] rounded-2xl p-5 border border-white/15 shadow-lg">
+          <div className="flex items-center gap-3 mb-4">
+            <RefreshCw className="text-white/90" size={20} />
+            <h2 className="text-lg font-medium text-white/90">
+              {t('convert')}
+            </h2>
+          </div>
+
+          <Button
+            onClick={() => router.push('/convert')}
+            className="w-full px-4 py-3 text-sm flex items-center justify-center gap-2"
+          >
+            <RefreshCw size={18} />
+            <span>{t('convertButton')}</span>
+          </Button>
         </div>
 
         {/* Development Section */}

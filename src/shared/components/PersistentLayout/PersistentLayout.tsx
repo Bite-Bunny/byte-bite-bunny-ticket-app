@@ -11,7 +11,7 @@ interface PersistentLayoutProps {
 
 const TAB_ROUTES: Record<TabType, string> = {
   home: '/',
-  convert: '/convert',
+  cases: '/cases',
   inventory: '/inventory',
   settings: '/settings',
 }
@@ -25,15 +25,16 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
   // Check if current route is a known route (not 404)
   const isKnownRoute = [
     '/',
-    '/convert',
+    '/cases',
     '/inventory',
     '/settings',
     '/credits',
+    '/convert',
   ].includes(pathname)
 
   // Initialize state based on current route to prevent blinking
   const getInitialTab = (): TabType => {
-    if (pathname === '/convert') return 'convert'
+    if (pathname === '/cases') return 'cases'
     if (pathname === '/inventory') return 'inventory'
     if (pathname === '/settings') return 'settings'
     return 'home'
@@ -49,8 +50,8 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
   }, [router])
 
   useEffect(() => {
-    if (pathname === '/convert') {
-      setActiveTab('convert')
+    if (pathname === '/cases') {
+      setActiveTab('cases')
     } else if (pathname === '/inventory') {
       setActiveTab('inventory')
     } else if (pathname === '/settings') {
@@ -93,24 +94,23 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
         }}
       />
       <div className="relative w-full h-full flex flex-col z-[1]">
-        {pathname !== '/inventory' && (
-          <div className="flex justify-center items-center px-5 py-[10px] flex-shrink-0 max-sm:px-5 max-sm:py-[50px] max-sm:pb-[30px] max-h-667:px-5 max-h-667:py-10 max-h-667:pb-5">
-            <Image
-              src="/logo.svg"
-              alt="Bite Bunny Logo"
-              width={99}
-              height={20}
-              className="brightness-0 invert opacity-90"
-              priority
-            />
-          </div>
-        )}
-
         <div
           className={`flex-1 flex flex-col px-5 overflow-y-auto scrollbar-none ${
             isKnownRoute ? 'pb-[120px]' : 'pb-5'
           }`}
         >
+          {pathname !== '/inventory' && (
+            <div className="flex justify-center items-center py-[10px] flex-shrink-0 max-sm:py-[50px] max-sm:pb-[30px] max-h-667:py-10 max-h-667:pb-5">
+              <Image
+                src="/logo.svg"
+                alt="Bite Bunny Logo"
+                width={99}
+                height={20}
+                className="brightness-0 invert opacity-90"
+                priority
+              />
+            </div>
+          )}
           {children}
         </div>
 

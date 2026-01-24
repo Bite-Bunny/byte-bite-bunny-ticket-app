@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, RefreshCw, ShoppingBag, Settings } from 'lucide-react'
+import { Home, Package, ShoppingBag, Settings } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { TabType } from './MobileLayout'
 
@@ -21,7 +21,7 @@ export function MobileNavBar({
 
   const tabs = [
     { id: 'home' as TabType, icon: Home, label: t('home') },
-    { id: 'convert' as TabType, icon: RefreshCw, label: t('convert') },
+    { id: 'cases' as TabType, icon: Package, label: t('cases') },
     { id: 'inventory' as TabType, icon: ShoppingBag, label: t('inventory') },
     { id: 'settings' as TabType, icon: Settings, label: t('settings') },
   ]

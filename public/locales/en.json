@@ -6,7 +6,7 @@
   },
   "navigation": {
     "home": "Home",
-    "convert": "Convert",
+    "cases": "Cases",
     "inventory": "Inventory",
     "settings": "Settings"
   },
@@ -43,7 +43,14 @@
   },
   "settings": {
     "title": "Settings",
-    "language": "Language"
+    "language": "Language",
+    "convert": "Convert",
+    "convertButton": "Convert Tickets"
+  },
+  "cases": {
+    "title": "Cases",
+    "creditIconAlt": "Credit coin icon",
+    "getCredits": "Get Credits"
   },
   "inventory": {
     "title": "Tickets"
