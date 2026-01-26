@@ -21,9 +21,6 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // Enable SWC minification (faster and better than Terser)
-  swcMinify: true,
-
   // Optimize production builds
   productionBrowserSourceMaps: false,
 
@@ -38,8 +35,19 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // Compiler options to reduce legacy JavaScript
+  compiler: {
+    // Remove console.log in production
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? {
+            exclude: ['error', 'warn'],
+          }
+        : false,
+  },
+
   // Webpack optimizations
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     if (!isServer) {
       // Optimize bundle splitting
       config.optimization = {
@@ -48,6 +56,8 @@ const nextConfig: NextConfig = {
         runtimeChunk: 'single',
         splitChunks: {
           chunks: 'all',
+          maxInitialRequests: 25,
+          minSize: 20000,
           cacheGroups: {
             // Separate vendor chunks
             vendor: {
@@ -55,6 +65,7 @@ const nextConfig: NextConfig = {
               name: 'vendors',
               priority: 10,
               reuseExistingChunk: true,
+              minChunks: 1,
             },
             // Separate three.js and related 3D libraries (large)
             three: {
@@ -62,12 +73,21 @@ const nextConfig: NextConfig = {
               name: 'three',
               priority: 20,
               reuseExistingChunk: true,
+              enforce: true,
             },
             // Separate framer-motion (large)
             framerMotion: {
               test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
               name: 'framer-motion',
               priority: 20,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
+            // Separate axios
+            axios: {
+              test: /[\\/]node_modules[\\/]axios[\\/]/,
+              name: 'axios',
+              priority: 15,
               reuseExistingChunk: true,
             },
             // Common chunks

@@ -36,18 +36,18 @@ export function CasesContent() {
     <Page>
       <div className="flex flex-col w-full max-w-full min-h-0 py-4">
         <motion.h1
-          initial={{ opacity: 0, y: -20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
           className="text-center text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8 mt-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
         >
           {t('title')}
         </motion.h1>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
           className="flex justify-center mb-6"
         >
           <Button
@@ -72,9 +72,13 @@ export function CasesContent() {
           {mockCases.map((caseItem, index) => (
             <motion.div
               key={caseItem.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
+              transition={{
+                duration: 0.2,
+                delay: index < 3 ? index * 0.05 : 0,
+                ease: 'easeOut',
+              }}
             >
               <Card
                 variant="elevated"

@@ -5,7 +5,6 @@ import React, { PropsWithChildren, useEffect } from 'react'
 import { TonConnectUIProvider } from '@tonconnect/ui-react'
 import { getQueryClient } from '@/shared/lib/query-client'
 import { useTelegramLocale } from '@/shared/hooks/useTelegramLocale'
-import WebSocketProvider from '@/shared/components/WebSocketProvider'
 import { PRELOAD_MODELS } from '@/shared/lib/models.constants'
 
 // Defer 3D model preloading to not block initial page load
@@ -74,7 +73,7 @@ const Providers = ({ children }: PropsWithChildren) => {
   return (
     <QueryClientProvider client={queryClient}>
       <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
-        <WebSocketProvider>{children}</WebSocketProvider>
+        {children}
       </TonConnectUIProvider>
     </QueryClientProvider>
   )

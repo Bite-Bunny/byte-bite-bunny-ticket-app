@@ -42,11 +42,21 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
 
   const [activeTab, setActiveTab] = useState<TabType>(getInitialTab)
 
-  // Prefetch all routes on mount for instant navigation
+  // Prefetch all routes on mount for instant navigation - deferred to not block initial render
   useEffect(() => {
-    Object.values(TAB_ROUTES).forEach((route) => {
-      router.prefetch(route)
-    })
+    // Use requestIdleCallback to defer prefetching until browser is idle
+    const prefetchRoutes = () => {
+      Object.values(TAB_ROUTES).forEach((route) => {
+        router.prefetch(route)
+      })
+    }
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      requestIdleCallback(prefetchRoutes, { timeout: 3000 })
+    } else {
+      // Fallback: delay prefetch slightly
+      setTimeout(prefetchRoutes, 1000)
+    }
   }, [router])
 
   useEffect(() => {
@@ -75,10 +85,12 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
 
   const handleTabHover = useCallback(
     (tab: TabType) => {
-      // Prefetch on hover for even faster navigation
-      router.prefetch(TAB_ROUTES[tab])
+      // Prefetch on hover for even faster navigation - use startTransition to make it non-blocking
+      startTransition(() => {
+        router.prefetch(TAB_ROUTES[tab])
+      })
     },
-    [router],
+    [router, startTransition],
   )
 
   return (
@@ -106,8 +118,10 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
                 alt="Bite Bunny Logo"
                 width={99}
                 height={20}
+                sizes="99px"
                 className="brightness-0 invert opacity-90"
                 priority
+                fetchPriority="high"
               />
             </div>
           )}

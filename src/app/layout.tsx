@@ -40,15 +40,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <head>
-        {/* Preconnect to external domains for faster resource loading */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-          crossOrigin="anonymous"
-        />
-      </head>
+      <head />
       <body id="root">
         <I18nProvider>
           <Root>

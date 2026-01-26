@@ -1,21 +1,42 @@
 // Copyright 2026 Byte Bite Bunny Authors. All rights reserved.
 // src/shared/lib/cache-model.ts
-import * as THREE from 'three'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { getCachedModelData, setCachedModelData } from './indexeddb-cache'
 
+// Lazy load THREE.js to avoid blocking initial bundle
+let THREE: typeof import('three') | null = null
+let GLTFLoader:
+  | typeof import('three/addons/loaders/GLTFLoader.js').GLTFLoader
+  | null = null
+
+const loadThree = async () => {
+  if (!THREE) {
+    THREE = await import('three')
+    const loaderModule = await import('three/addons/loaders/GLTFLoader.js')
+    GLTFLoader = loaderModule.GLTFLoader
+  }
+  return { THREE: THREE!, GLTFLoader: GLTFLoader! }
+}
+
 // In-memory cache for faster access within the same session
-const modelCache = new Map<string, THREE.Group>()
-const loader = new GLTFLoader()
+// Using any for now since THREE is lazy loaded
+const modelCache = new Map<string, any>()
+let loader: any = null
 
 /**
  * Load model from ArrayBuffer using GLTFLoader
  * Creates a Blob URL from the ArrayBuffer for compatibility with GLTFLoader
  */
-function loadModelFromArrayBuffer(
+async function loadModelFromArrayBuffer(
   arrayBuffer: ArrayBuffer,
   modelPath: string,
-): Promise<THREE.Group> {
+): Promise<any> {
+  const { GLTFLoader: Loader } = await loadThree()
+
+  // Initialize loader if not already done
+  if (!loader) {
+    loader = new Loader()
+  }
+
   return new Promise((resolve, reject) => {
     // Determine MIME type based on file extension
     const isGLB = modelPath.toLowerCase().endsWith('.glb')
@@ -27,13 +48,13 @@ function loadModelFromArrayBuffer(
 
     loader.load(
       blobUrl,
-      (gltf) => {
+      (gltf: { scene: unknown }) => {
         // Clean up the Blob URL after loading
         URL.revokeObjectURL(blobUrl)
         resolve(gltf.scene)
       },
       undefined,
-      (error) => {
+      (error: any) => {
         URL.revokeObjectURL(blobUrl)
         reject(error)
       },
@@ -44,7 +65,7 @@ function loadModelFromArrayBuffer(
 /**
  * Fetch model from network and cache it
  */
-async function fetchAndCacheModel(modelPath: string): Promise<THREE.Group> {
+async function fetchAndCacheModel(modelPath: string): Promise<any> {
   try {
     // Fetch the model file
     const response = await fetch(modelPath)
@@ -88,9 +109,7 @@ async function fetchAndCacheModel(modelPath: string): Promise<THREE.Group> {
  * scene.add(model)
  * ```
  */
-export const getCachedModel = async (
-  modelPath: string,
-): Promise<THREE.Group> => {
+export const getCachedModel = async (modelPath: string): Promise<any> => {
   // Tier 1: Check in-memory cache (fastest)
   if (modelCache.has(modelPath)) {
     return modelCache.get(modelPath)!.clone()

@@ -18,12 +18,6 @@
     "previousTicket": "Previous ticket",
     "nextTicket": "Next ticket"
   },
-  "websocket": {
-    "connected": "WebSocket Connected",
-    "disconnected": "WebSocket Disconnected",
-    "error": "Error",
-    "lastMessage": "Last"
-  },
   "user": {
     "welcome": "Welcome to Bite Bunny!",
     "loadingData": "Loading user data...",

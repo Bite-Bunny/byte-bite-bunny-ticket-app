@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Button } from '@/shared/components/ui'
 
@@ -11,12 +10,7 @@ export function CreditsNavigationButton() {
   const router = useRouter()
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
-      className="fixed top-28 md:top-32 right-5 z-50 pointer-events-auto"
-    >
+    <div className="fixed top-28 md:top-32 right-5 z-50 pointer-events-auto">
       <Button
         onClick={() => router.push('/credits')}
         className="px-4 py-3 rounded-xl flex items-center gap-2 text-sm"
@@ -33,6 +27,6 @@ export function CreditsNavigationButton() {
           {t('purchaseCredits')}
         </span>
       </Button>
-    </motion.div>
+    </div>
   )
 }

@@ -18,12 +18,6 @@
     "previousTicket": "Предыдущий билет",
     "nextTicket": "Следующий билет"
   },
-  "websocket": {
-    "connected": "WebSocket подключен",
-    "disconnected": "WebSocket отключен",
-    "error": "Ошибка",
-    "lastMessage": "Последнее"
-  },
   "user": {
     "welcome": "Добро пожаловать в Bite Bunny!",
     "loadingData": "Загрузка данных пользователя...",

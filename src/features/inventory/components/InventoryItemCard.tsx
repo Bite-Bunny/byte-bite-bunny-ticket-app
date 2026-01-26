@@ -41,12 +41,15 @@ export function InventoryItemCard({
           router.push(previewUrl)
         }
       }}
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.4,
-        delay: Math.min(index * 0.05, 0.5), // Cap animation delay
+        duration: 0.2,
+        delay: index < 6 ? index * 0.03 : 0, // Only animate first 6 items
         ease: 'easeOut',
+      }}
+      style={{
+        willChange: 'transform, opacity',
       }}
       className="relative w-full aspect-square"
       onMouseEnter={() => supportsHover && setIsHovered(true)}

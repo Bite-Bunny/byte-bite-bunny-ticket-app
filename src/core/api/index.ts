@@ -1,7 +1,5 @@
 // Core API exports
 export { apiClient } from './instance'
-export { webSocketService } from './websocket'
-export type { WebSocketMessage, WebSocketService } from './websocket'
 
 // API types and utilities
 export * from './types'

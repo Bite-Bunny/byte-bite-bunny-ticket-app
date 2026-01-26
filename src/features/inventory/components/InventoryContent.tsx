@@ -29,9 +29,9 @@ export default function InventoryContent() {
 
       {/* Title */}
       <motion.h1
-        initial={{ opacity: 0, y: -20 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         className="text-center text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 mt-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] flex-shrink-0"
       >
         {t('title')}
