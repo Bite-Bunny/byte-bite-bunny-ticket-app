@@ -259,13 +259,13 @@ export function CasesContent() {
                 onClick={() => handleCaseClick(caseItem)}
               >
                 <div className="flex flex-col gap-4">
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/10">
+                  <div className="flex justify-center items-center h-52 md:h-60">
                     <Image
                       src={caseItem.image}
                       alt={caseItem.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-contain p-4"
+                      width={208}
+                      height={208}
+                      className="object-contain w-52 h-52 md:w-60 md:h-60"
                       loading={index < 3 ? 'eager' : 'lazy'}
                     />
                   </div>
