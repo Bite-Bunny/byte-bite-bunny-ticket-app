@@ -49,7 +49,7 @@ export const DrawerOverlay = ({ className }: { className?: string }) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        'fixed inset-0 bg-black/60 backdrop-blur-sm z-50',
+        'fixed inset-0 bg-black/60 backdrop-blur-sm z-[1001]',
         className,
       )}
       onClick={onClose}
@@ -88,7 +88,7 @@ export const DrawerContent = ({ className, children }: DrawerContentProps) => {
         dragElastic={{ top: 0, bottom: 0.5 }}
         onDragEnd={handleDragEnd}
         className={cn(
-          'fixed bottom-0 left-0 right-0 z-50',
+          'fixed bottom-0 left-0 right-0 z-[1002]',
           'max-h-[85vh] overflow-hidden',
           'bg-white/10 backdrop-blur-[20px] border border-white/15 border-b-0',
           'rounded-t-3xl',
