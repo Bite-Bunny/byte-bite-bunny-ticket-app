@@ -16,11 +16,24 @@ interface CaseItem {
 }
 
 const mockCases: CaseItem[] = [
-  { id: '1', name: 'Wood Case', credits: 100, image: '/cases/wood-case.png' },
-  { id: '2', name: 'Wood Case', credits: 200, image: '/cases/wood-case.png' },
-  { id: '3', name: 'Wood Case', credits: 300, image: '/cases/wood-case.png' },
-  { id: '4', name: 'Wood Case', credits: 500, image: '/cases/wood-case.png' },
-  { id: '5', name: 'Wood Case', credits: 1000, image: '/cases/wood-case.png' },
+  {
+    id: '1',
+    name: 'Silver Case',
+    credits: 100,
+    image: '/cases/silver-case.png',
+  },
+  {
+    id: '2',
+    name: 'Gold Case',
+    credits: 200,
+    image: '/cases/gold-case.png',
+  },
+  {
+    id: '3',
+    name: 'Diamond Case',
+    credits: 300,
+    image: '/cases/diamond-case.png',
+  },
 ]
 
 export function CasesContent() {

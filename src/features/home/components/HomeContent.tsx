@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { showDailyCase } from '@/features/case'
+import { showDailyCase } from '@/features/daily-case'
 
 // Lazy load components to reduce initial JavaScript execution time
 const TicketFeedWithData = dynamic(
@@ -17,7 +17,7 @@ const TicketFeedWithData = dynamic(
 )
 
 const DailyCase = dynamic(
-  () => import('@/features/case').then((mod) => ({ default: mod.DailyCase })),
+  () => import('@/features/daily-case').then((mod) => ({ default: mod.DailyCase })),
   {
     ssr: false,
     loading: () => null,
