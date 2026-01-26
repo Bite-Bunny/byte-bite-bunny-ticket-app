@@ -1,11 +1,25 @@
 'use client'
 
-import React, { useState } from 'react'
-import { PreviewScene, useModelPreload } from '@/features/preview-scene'
+import React, { useState, Suspense } from 'react'
+import dynamic from 'next/dynamic'
+import { useModelPreload } from '@/features/preview-scene'
 import type { AnimationControls } from '@/features/preview-scene'
 import { MODEL_PATHS } from '@/shared/lib/models.constants'
 import { Button } from '@/shared/components/ui/Button'
 import { Card } from '@/shared/components/ui/Card'
+import { Loading } from '@/shared/components/Loading'
+
+// Dynamically import PreviewScene to reduce initial bundle size
+const PreviewScene = dynamic(
+  () =>
+    import('@/features/preview-scene').then((mod) => ({
+      default: mod.PreviewScene,
+    })),
+  {
+    ssr: false,
+    loading: () => <Loading />,
+  },
+)
 
 export default function PreviewPage() {
   const [animationControls, setAnimationControls] =
@@ -29,18 +43,20 @@ export default function PreviewPage() {
 
   return (
     <div className="w-full h-full flex flex-col relative">
-      <PreviewScene
-        modelPath={MODEL_PATHS.REGULAR_CASE}
-        animation={{
-          autoPlay: true,
-          loop: false,
-          speed: 0.5,
-          holdAtEnd: true, // Chest will stay open after animation
-        }}
-        onAnimationControlsReady={(controls) => {
-          setAnimationControls(controls)
-        }}
-      />
+      <Suspense fallback={<Loading />}>
+        <PreviewScene
+          modelPath={MODEL_PATHS.REGULAR_CASE}
+          animation={{
+            autoPlay: true,
+            loop: false,
+            speed: 0.5,
+            holdAtEnd: true, // Chest will stay open after animation
+          }}
+          onAnimationControlsReady={(controls) => {
+            setAnimationControls(controls)
+          }}
+        />
+      </Suspense>
 
       {/* Glass morphism control panel */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">

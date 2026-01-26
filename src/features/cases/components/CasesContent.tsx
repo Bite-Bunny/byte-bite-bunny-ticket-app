@@ -59,7 +59,9 @@ export function CasesContent() {
                 src="/credit-icon.png"
                 alt={t('creditIconAlt')}
                 fill
+                sizes="20px"
                 className="object-contain"
+                priority
               />
             </div>
             <span className="text-white font-semibold">{t('getCredits')}</span>
@@ -85,7 +87,9 @@ export function CasesContent() {
                       src={caseItem.image}
                       alt={caseItem.name}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-contain p-4"
+                      loading={index < 3 ? 'eager' : 'lazy'}
                     />
                   </div>
 
@@ -99,6 +103,7 @@ export function CasesContent() {
                         src="/credit-icon.png"
                         alt={t('creditIconAlt')}
                         fill
+                        sizes="24px"
                         className="object-contain"
                       />
                     </div>

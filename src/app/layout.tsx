@@ -12,6 +12,19 @@ import { I18nProvider } from '@/core/i18n/provider'
 export const metadata: Metadata = {
   title: 'Bite Bunny',
   description: 'Your go-to app for managing tickets and more',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_API_URL || 'https://api.bbt-tg.xyz',
+  ),
+  openGraph: {
+    title: 'Bite Bunny',
+    description: 'Your go-to app for managing tickets and more',
+    type: 'website',
+  },
+  // Optimize for performance
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export const viewport: Viewport = {
@@ -19,6 +32,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: '#886403',
 }
 
 export default async function RootLayout({ children }: PropsWithChildren) {
@@ -26,6 +40,15 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to external domains for faster resource loading */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body id="root">
         <I18nProvider>
           <Root>

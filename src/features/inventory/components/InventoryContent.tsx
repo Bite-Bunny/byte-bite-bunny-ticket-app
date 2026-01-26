@@ -21,6 +21,7 @@ export default function InventoryContent() {
           alt="Bite Bunny Logo"
           width={99}
           height={20}
+          sizes="99px"
           className="brightness-0 invert opacity-90"
           priority
         />
