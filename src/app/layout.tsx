@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { getLocale } from 'next-intl/server'
+import { Inika } from 'next/font/google'
 
 import 'normalize.css/normalize.css'
 import './globals.css'
@@ -8,6 +9,13 @@ import { Root } from '@/shared/components/Root/Root'
 import { PersistentLayout } from '@/shared/components/PersistentLayout'
 import Providers from '@/shared/components/Providers'
 import { I18nProvider } from '@/core/i18n/provider'
+
+const inika = Inika({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+  variable: '--font-inika',
+})
 
 export const metadata: Metadata = {
   title: 'Bite Bunny',
@@ -41,7 +49,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <head />
-      <body id="root">
+      <body id="root" className={inika.className}>
         <I18nProvider>
           <Root>
             <PersistentLayout>
