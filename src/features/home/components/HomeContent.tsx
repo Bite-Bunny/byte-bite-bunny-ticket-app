@@ -6,7 +6,10 @@ import { showDailyCase } from '@/features/case'
 
 // Lazy load components to reduce initial JavaScript execution time
 const TicketFeedWithData = dynamic(
-  () => import('@/features/ticket-feed').then((mod) => ({ default: mod.TicketFeedWithData })),
+  () =>
+    import('@/features/ticket-feed').then((mod) => ({
+      default: mod.TicketFeedWithData,
+    })),
   {
     ssr: false,
     loading: () => null,
