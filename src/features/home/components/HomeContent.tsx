@@ -17,7 +17,8 @@ const TicketFeedWithData = dynamic(
 )
 
 const DailyCase = dynamic(
-  () => import('@/features/daily-case').then((mod) => ({ default: mod.DailyCase })),
+  () =>
+    import('@/features/daily-case').then((mod) => ({ default: mod.DailyCase })),
   {
     ssr: false,
     loading: () => null,
