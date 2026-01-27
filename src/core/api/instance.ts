@@ -17,7 +17,9 @@ apiClient.interceptors.request.use(
     // Get initDataRaw on each request (handles client-side only)
     if (typeof window !== 'undefined') {
       const initDataRaw = retrieveRawInitData()
-      const authHeader = process.env.NEXT_PUBLIC_MOCK_INIT_AUTH || initDataRaw
+      // const authHeader = process.env.NEXT_PUBLIC_MOCK_INIT_AUTH || initDataRaw
+
+      const authHeader = initDataRaw || ''
 
       if (authHeader && config.headers) {
         config.headers.Authorization = authHeader
