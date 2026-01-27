@@ -2,6 +2,38 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { axiosHeaders, axiosTimeout, baseURL } from './config'
 import { retrieveRawInitData } from '@telegram-apps/sdk-react'
 
+/**
+ * Returns the authorization value that should be used for both
+ * HTTP requests and WebSocket connections.
+ *
+ * This centralizes the logic so our Axios instance and any
+ * real-time transports stay perfectly in sync.
+ */
+export const getAuthHeader = (): string | undefined => {
+  // Browser: prefer mock auth when running locally, otherwise use real Telegram data
+  if (typeof window !== 'undefined') {
+    const isLocalhost =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+
+    if (isLocalhost && process.env.NEXT_PUBLIC_MOCK_INIT_AUTH) {
+      return process.env.NEXT_PUBLIC_MOCK_INIT_AUTH
+    }
+
+    const initDataRaw = retrieveRawInitData()
+    if (initDataRaw) {
+      return initDataRaw
+    }
+  }
+
+  // Server-side / test fallback
+  if (process.env.MOCK_INIT_AUTH) {
+    return process.env.MOCK_INIT_AUTH
+  }
+
+  return undefined
+}
+
 // Create axios instance
 export const apiClient = axios.create({
   baseURL: baseURL,
@@ -14,19 +46,10 @@ export const apiClient = axios.create({
 // Request interceptor - add auth token dynamically
 apiClient.interceptors.request.use(
   (config) => {
-    // Get initDataRaw on each request (handles client-side only)
-    if (typeof window !== 'undefined') {
-      const initDataRaw = retrieveRawInitData()
-      // const authHeader = process.env.NEXT_PUBLIC_MOCK_INIT_AUTH || initDataRaw
+    const authHeader = getAuthHeader()
 
-      const authHeader = initDataRaw || ''
-
-      if (authHeader && config.headers) {
-        config.headers.Authorization = authHeader
-      }
-    } else if (process.env.MOCK_INIT_AUTH && config.headers) {
-      // Server-side fallback
-      config.headers.Authorization = process.env.MOCK_INIT_AUTH
+    if (authHeader && config.headers) {
+      config.headers.Authorization = authHeader
     }
 
     return config

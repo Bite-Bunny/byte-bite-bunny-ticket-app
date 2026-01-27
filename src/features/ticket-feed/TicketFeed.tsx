@@ -9,6 +9,7 @@ import { TicketSlide } from './components/TicketSlide'
 import { ScrollIndicator } from './components/ScrollIndicator'
 import { NavigationButtons } from './components/NavigationButtons'
 import { generateTickets } from './utils/generateTickets'
+import { useTicketSession } from './hooks/useTicketSession'
 
 // Only render visible tickets + buffer to reduce TBT
 const VISIBLE_BUFFER = 2 // Render 2 tickets before and after visible one
@@ -119,6 +120,28 @@ export const TicketFeedWithData = React.memo(
   }: Omit<TicketFeedProps, 'tickets'> & { count?: number }) => {
     // Use useMemo to avoid regenerating tickets on every render
     const tickets = useMemo(() => generateTickets(count), [count])
+    return <TicketFeed tickets={tickets} {...props} />
+  },
+)
+
+/**
+ * Live ticket feed powered by the session WebSocket.
+ * This is what the main app should use instead of mock data.
+ */
+export const TicketFeedLive = React.memo(
+  (props: Omit<TicketFeedProps, 'tickets'>) => {
+    const { tickets, status } = useTicketSession()
+
+    // Until we have at least one real ticket, keep a lightweight
+    // full-screen loader instead of rendering the heavy 3D feed.
+    if (tickets.length === 0) {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center text-white text-xl font-semibold">
+          {status === 'error' ? 'Failed to load tickets' : 'Loading tickets...'}
+        </div>
+      )
+    }
+
     return <TicketFeed tickets={tickets} {...props} />
   },
 )

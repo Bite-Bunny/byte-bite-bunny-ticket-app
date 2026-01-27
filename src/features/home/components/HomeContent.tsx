@@ -5,10 +5,10 @@ import dynamic from 'next/dynamic'
 import { showDailyCase } from '@/features/daily-case'
 
 // Lazy load components to reduce initial JavaScript execution time
-const TicketFeedWithData = dynamic(
+const TicketFeedLive = dynamic(
   () =>
     import('@/features/ticket-feed').then((mod) => ({
-      default: mod.TicketFeedWithData,
+      default: mod.TicketFeedLive,
     })),
   {
     ssr: false,
@@ -51,7 +51,7 @@ export default function HomeContent() {
   if (showTickets) {
     return (
       <>
-        <TicketFeedWithData count={10} />
+        <TicketFeedLive />
         {showDailyCase(dailyCase) && <DailyCase />}
         <CreditsNavigationButton />
       </>
