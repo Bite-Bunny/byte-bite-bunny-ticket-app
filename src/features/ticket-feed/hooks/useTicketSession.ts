@@ -7,6 +7,11 @@ import { mapApiTicketToTicketData } from '../utils/mapApiTicket'
 
 type SessionStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error'
 
+// Hard cap on how many tickets we keep in memory.
+// This prevents the tickets array from growing without bound, which
+// would otherwise increase render cost over time and hurt Lighthouse scores.
+const MAX_TICKETS = 100
+
 const isWsDebugEnabled = process.env.NEXT_PUBLIC_WS_DEBUG === 'true'
 
 const wsDebugLog = (...args: unknown[]) => {
@@ -61,7 +66,14 @@ export const useTicketSession = () => {
         const ticket = mapApiTicketToTicketData(parsed)
 
         if (ticket) {
-          setTickets((prev) => [...prev, ticket])
+          setTickets((prev) => {
+            // Append new ticket and trim to the last MAX_TICKETS items
+            const next = [...prev, ticket]
+            if (next.length > MAX_TICKETS) {
+              return next.slice(next.length - MAX_TICKETS)
+            }
+            return next
+          })
         }
       } catch (err) {
         console.error('Failed to parse ticket message', err)
