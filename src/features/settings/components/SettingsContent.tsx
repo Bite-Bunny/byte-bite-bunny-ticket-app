@@ -55,7 +55,7 @@ export default function SettingsContent() {
 
   // Get display name from Telegram user
   const displayName = telegramUser
-    ? [telegramUser.firstName, telegramUser.lastName].filter(Boolean).join(' ')
+    ? [telegramUser.first_name, telegramUser.last_name].filter(Boolean).join(' ')
     : 'User'
 
   return (
@@ -75,9 +75,9 @@ export default function SettingsContent() {
 
           {/* User Avatar and Name */}
           <div className="flex items-center gap-4 mb-4">
-            {telegramUser?.photoUrl ? (
+            {telegramUser?.photo_url ? (
               <img
-                src={telegramUser.photoUrl}
+                src={telegramUser.photo_url}
                 alt={displayName}
                 className="w-16 h-16 rounded-full border-2 border-white/20"
               />
@@ -89,7 +89,7 @@ export default function SettingsContent() {
             <div className="flex flex-col">
               <span className="text-lg font-semibold text-white flex items-center gap-2">
                 {displayName}
-                {telegramUser?.isPremium && (
+                {telegramUser?.is_premium && (
                   <Crown className="text-yellow-400" size={18} />
                 )}
               </span>
