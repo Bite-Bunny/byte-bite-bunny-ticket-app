@@ -5,9 +5,8 @@ import '@testing-library/jest-dom'
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props) => {
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+    // eslint-disable-next-line no-unused-vars
     const { priority, ...rest } = props
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     return <img {...rest} />
   },
 }))
