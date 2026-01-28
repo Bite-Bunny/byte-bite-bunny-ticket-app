@@ -1,18 +1,36 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 
 export function DailyCase() {
   const t = useTranslations('dailyCrate')
   const [isHovered, setIsHovered] = useState(false)
+  const [isPageVisible, setIsPageVisible] = useState(true)
+  const shouldReduceMotion = useReducedMotion()
+
+  // CRITICAL FIX: Pause animations when page is not visible to save CPU
+  // This prevents continuous CPU usage that triggers "crypto mining" detection
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(!document.hidden)
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
 
   const handleClick = () => {
     // TODO: Implement claim logic - open modal or navigate to claim page
     console.log('Open daily case')
   }
+
+  // Pause animations if page is hidden or user prefers reduced motion
+  const shouldAnimate = isPageVisible && !shouldReduceMotion
 
   return (
     <motion.div
@@ -39,15 +57,28 @@ export function DailyCase() {
         {/* Pulsing golden glow background */}
         <motion.div
           className="absolute inset-0 rounded-full pointer-events-none -z-10"
-          animate={{
-            opacity: [0.4, 0.7, 0.4],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
+          animate={
+            shouldAnimate
+              ? {
+                  opacity: [0.4, 0.7, 0.4],
+                  scale: [1, 1.2, 1],
+                }
+              : {
+                  opacity: 0.5,
+                  scale: 1,
+                }
+          }
+          transition={
+            shouldAnimate
+              ? {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }
+              : {
+                  duration: 0,
+                }
+          }
           style={{
             background:
               'radial-gradient(circle at center, rgba(255, 215, 0, 0.5), transparent 70%)',
@@ -58,14 +89,26 @@ export function DailyCase() {
         {/* Daily case Image */}
         <div className="relative w-full h-full flex items-center justify-center">
           <motion.div
-            animate={{
-              y: [0, -4, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
+            animate={
+              shouldAnimate
+                ? {
+                    y: [0, -4, 0],
+                  }
+                : {
+                    y: 0,
+                  }
+            }
+            transition={
+              shouldAnimate
+                ? {
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }
+                : {
+                    duration: 0,
+                  }
+            }
             className="relative w-12 h-12 md:w-14 md:h-14"
           >
             <Image

@@ -8,9 +8,10 @@ import { mapApiTicketToTicketData } from '../utils/mapApiTicket'
 type SessionStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error'
 
 // Hard cap on how many tickets we keep in memory.
-// This prevents the tickets array from growing without bound, which
-// would otherwise increase render cost over time and hurt Lighthouse scores.
-const MAX_TICKETS = 100
+// Reduced from 100 to 30 to significantly reduce memory usage.
+// Each ticket can contain large data structures, so keeping fewer in memory
+// prevents excessive RAM consumption (250MB+ can become 700MB+ with 100 tickets).
+const MAX_TICKETS = 30
 
 const isWsDebugEnabled = process.env.NEXT_PUBLIC_WS_DEBUG === 'true'
 
@@ -97,12 +98,33 @@ export const useTicketSession = () => {
     }
 
     return () => {
-      if (
-        socketRef.current &&
-        socketRef.current.readyState === WebSocket.OPEN
-      ) {
-        socketRef.current.close()
+      // CRITICAL FIX: Close socket in ANY state (CONNECTING, OPEN, CLOSING)
+      // The previous code only closed OPEN sockets, causing leaks
+      if (socketRef.current) {
+        const currentSocket = socketRef.current
+        const readyState = currentSocket.readyState
+
+        // Remove event handlers to prevent memory leaks
+        currentSocket.onopen = null
+        currentSocket.onmessage = null
+        currentSocket.onerror = null
+        currentSocket.onclose = null
+
+        // Close socket if it's not already closed (CLOSED = 3)
+        if (
+          readyState !== WebSocket.CLOSED &&
+          readyState !== WebSocket.CLOSING
+        ) {
+          wsDebugLog('closing WebSocket on cleanup', { readyState })
+          currentSocket.close()
+        }
+
+        socketRef.current = null
       }
+
+      // MEMORY FIX: Clear tickets array on unmount to free memory
+      // This ensures all ticket data is garbage collected when component unmounts
+      setTickets([])
     }
   }, [])
 

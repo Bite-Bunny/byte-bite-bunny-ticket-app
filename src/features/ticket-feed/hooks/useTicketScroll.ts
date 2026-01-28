@@ -39,6 +39,8 @@ export const useTicketScroll = ({
   const dragStartScroll = useRef(0)
   const isScrollingRef = useRef(false)
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const animationFrameRef = useRef<number | null>(null)
+  const isMountedRef = useRef(true)
 
   // Handle scroll to snap to nearest ticket
   useEffect(() => {
@@ -68,14 +70,19 @@ export const useTicketScroll = ({
   // Smooth scroll to specific index
   const scrollToIndex = (index: number) => {
     const container = containerRef.current
-    if (!container) return
+    if (!container || !isMountedRef.current) return
 
     const itemHeight = container.clientHeight
     const targetScroll = index * itemHeight
 
-    // Clear any existing timeout
+    // Clear any existing timeout and animation frame
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current)
+      scrollTimeoutRef.current = null
+    }
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current)
+      animationFrameRef.current = null
     }
 
     // Mark as scrolling to prevent premature index updates
@@ -91,6 +98,20 @@ export const useTicketScroll = ({
     let frameCount = 0
 
     const checkScrollComplete = () => {
+      // CRITICAL FIX: Stop animation loop if component unmounted
+      if (!isMountedRef.current || !containerRef.current) {
+        isScrollingRef.current = false
+        animationFrameRef.current = null
+        return
+      }
+
+      const container = containerRef.current
+      if (!container) {
+        isScrollingRef.current = false
+        animationFrameRef.current = null
+        return
+      }
+
       const currentScrollTop = container.scrollTop
       frameCount++
 
@@ -101,18 +122,23 @@ export const useTicketScroll = ({
         frameCount >= MAX_SCROLL_ANIMATION_FRAMES
       ) {
         isScrollingRef.current = false
-        const finalScroll = container.scrollTop
-        const finalIndex = Math.round(finalScroll / itemHeight)
-        setCurrentIndex(finalIndex)
+        animationFrameRef.current = null
+        if (isMountedRef.current) {
+          const finalScroll = container.scrollTop
+          const finalIndex = Math.round(finalScroll / itemHeight)
+          setCurrentIndex(finalIndex)
+        }
       } else {
         lastScrollTop = currentScrollTop
-        requestAnimationFrame(checkScrollComplete)
+        animationFrameRef.current = requestAnimationFrame(checkScrollComplete)
       }
     }
 
     // Start checking after a short delay to allow scroll to begin
     scrollTimeoutRef.current = setTimeout(() => {
-      requestAnimationFrame(checkScrollComplete)
+      if (isMountedRef.current && containerRef.current) {
+        animationFrameRef.current = requestAnimationFrame(checkScrollComplete)
+      }
     }, SCROLL_COMPLETION_CHECK_DELAY)
   }
 
@@ -130,12 +156,26 @@ export const useTicketScroll = ({
     }
   }
 
-  // Cleanup timeout on unmount
+  // Cleanup timeout and animation frame on unmount
   useEffect(() => {
     return () => {
+      // CRITICAL FIX: Mark as unmounted to stop all ongoing operations
+      isMountedRef.current = false
+
+      // Cancel any pending timeout
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current)
+        scrollTimeoutRef.current = null
       }
+
+      // Cancel any pending animation frame (prevents infinite CPU usage)
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current)
+        animationFrameRef.current = null
+      }
+
+      // Reset scrolling state
+      isScrollingRef.current = false
     }
   }, [])
 

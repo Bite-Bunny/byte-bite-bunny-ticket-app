@@ -2,18 +2,36 @@
 
 import { useTranslations, useLocale } from 'next-intl'
 import { useTransition } from 'react'
-import { Settings, Globe, TestTube, RefreshCw } from 'lucide-react'
+import {
+  Settings,
+  Globe,
+  TestTube,
+  RefreshCw,
+  User,
+  Coins,
+  CreditCard,
+  Calendar,
+  Crown,
+} from 'lucide-react'
+import { initData, useSignal } from '@telegram-apps/sdk-react'
 import { setLocale } from '@/core/i18n/locale'
 import { localesMap } from '@/core/i18n/config'
 import type { Locale } from '@/core/i18n/types'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/shared/components/ui/Button'
+import { useUser } from '@/shared/hooks/api/useUser'
 
 export default function SettingsContent() {
   const t = useTranslations('settings')
   const locale = useLocale() as Locale
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+
+  // Get Telegram user data
+  const telegramUser = useSignal(initData.user)
+
+  // Get API user data (coins, credits, etc.)
+  const { data: apiUser, isLoading: isUserLoading } = useUser()
 
   const handleLocaleChange = async (newLocale: Locale) => {
     if (newLocale === locale) return
@@ -25,6 +43,21 @@ export default function SettingsContent() {
     })
   }
 
+  // Format date helper
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return 'N/A'
+    return new Date(dateString).toLocaleDateString(locale, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
+
+  // Get display name from Telegram user
+  const displayName = telegramUser
+    ? [telegramUser.firstName, telegramUser.lastName].filter(Boolean).join(' ')
+    : 'User'
+
   return (
     <div className="flex flex-col p-5 gap-6">
       <div className="flex items-center gap-3 mb-2">
@@ -33,6 +66,87 @@ export default function SettingsContent() {
       </div>
 
       <div className="flex flex-col gap-4">
+        {/* User Profile Section */}
+        <div className="bg-white/10 backdrop-blur-[20px] rounded-2xl p-5 border border-white/15 shadow-lg">
+          <div className="flex items-center gap-3 mb-4">
+            <User className="text-white/90" size={20} />
+            <h2 className="text-lg font-medium text-white/90">Profile</h2>
+          </div>
+
+          {/* User Avatar and Name */}
+          <div className="flex items-center gap-4 mb-4">
+            {telegramUser?.photoUrl ? (
+              <img
+                src={telegramUser.photoUrl}
+                alt={displayName}
+                className="w-16 h-16 rounded-full border-2 border-white/20"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+                <User className="text-white/60" size={32} />
+              </div>
+            )}
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold text-white flex items-center gap-2">
+                {displayName}
+                {telegramUser?.isPremium && (
+                  <Crown className="text-yellow-400" size={18} />
+                )}
+              </span>
+              {telegramUser?.username && (
+                <span className="text-sm text-white/60">
+                  @{telegramUser.username}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* User Stats */}
+          {isUserLoading ? (
+            <div className="text-white/60 text-sm">Loading...</div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {/* Coins */}
+              <div className="bg-white/5 rounded-xl p-3 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                  <Coins className="text-yellow-400" size={20} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-white/60">Coins</span>
+                  <span className="text-lg font-bold text-white">
+                    {apiUser?.coins?.toLocaleString() ?? 0}
+                  </span>
+                </div>
+              </div>
+
+              {/* Credits */}
+              <div className="bg-white/5 rounded-xl p-3 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                  <CreditCard className="text-blue-400" size={20} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-white/60">Credits</span>
+                  <span className="text-lg font-bold text-white">
+                    {apiUser?.credits?.toLocaleString() ?? 0}
+                  </span>
+                </div>
+              </div>
+
+              {/* Member Since */}
+              <div className="bg-white/5 rounded-xl p-3 flex items-center gap-3 col-span-2">
+                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <Calendar className="text-green-400" size={20} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-white/60">Member Since</span>
+                  <span className="text-base font-medium text-white">
+                    {formatDate(apiUser?.registration)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
         {/* Language Section */}
         <div className="bg-white/10 backdrop-blur-[20px] rounded-2xl p-5 border border-white/15 shadow-lg">
           <div className="flex items-center gap-3 mb-4">

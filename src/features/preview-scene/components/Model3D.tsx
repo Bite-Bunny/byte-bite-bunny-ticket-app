@@ -254,8 +254,12 @@ export const Model3D = forwardRef<Model3DRef, Model3DProps>(
     }, [animation])
 
     // Update animation mixer each frame
+    // CRITICAL FIX: Only update mixer when animations are actually playing
+    // This prevents continuous CPU usage when animations are stopped
     useFrame((state, delta) => {
-      if (mixerRef.current) {
+      // Only update mixer if it exists AND there are active animations playing
+      // This prevents unnecessary CPU usage when animations are stopped
+      if (mixerRef.current && isPlayingRef.current) {
         mixerRef.current.update(delta)
       }
     })

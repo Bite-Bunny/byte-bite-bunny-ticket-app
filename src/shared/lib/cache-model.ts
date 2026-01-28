@@ -19,6 +19,11 @@ const loadThree = async () => {
 
 // In-memory cache for faster access within the same session
 // Using any for now since THREE is lazy loaded
+//
+// MEMORY WARNING: 3D models can consume significant RAM (10-50MB+ per model when loaded).
+// This cache stores the original models. Each call to getCachedModel() clones the model,
+// which creates a full copy in memory. Be mindful of memory usage in production.
+// Consider calling clearMemoryCache() if memory becomes an issue.
 const modelCache = new Map<string, any>()
 let loader: any = null
 
@@ -155,8 +160,28 @@ export const preloadModel = async (modelPath: string): Promise<void> => {
 /**
  * Clear the in-memory cache (IndexedDB cache persists)
  * Useful for memory management in long-running applications
+ *
+ * WARNING: This will force models to be reloaded from IndexedDB or network on next access.
+ * Only call this if you're experiencing memory issues and models are no longer needed.
  */
 export const clearMemoryCache = (): void => {
+  // Dispose of Three.js resources before clearing cache to free memory
+  modelCache.forEach((model) => {
+    if (model && typeof model.traverse === 'function') {
+      model.traverse((child: any) => {
+        if (child.geometry) {
+          child.geometry.dispose()
+        }
+        if (child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat: any) => mat.dispose())
+          } else {
+            child.material.dispose()
+          }
+        }
+      })
+    }
+  })
   modelCache.clear()
 }
 

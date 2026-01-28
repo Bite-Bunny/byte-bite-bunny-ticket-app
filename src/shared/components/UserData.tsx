@@ -8,7 +8,7 @@ import { useUser } from '../hooks/api/useUser'
 export default function UserData() {
   const t = useTranslations('user')
   const tCommon = useTranslations('common')
-  const { data: me, isLoading, error } = useUser()
+  const { data: user, isLoading, error } = useUser()
   const rawData = useRawInitData()
 
   if (isLoading) {
@@ -23,17 +23,29 @@ export default function UserData() {
     <div className="flex flex-col p-4 space-y-4">
       <div>{t('welcome')}</div>
       <div>
-        <div>
-          {t('username')}: {me?.username || 'N/A'}
-          {t('firstName')}: {me?.firstName || 'N/A'}
-          {t('lastName')}: {me?.lastName || 'N/A'}
+        <div className="space-y-1">
+          <div>ID: {user?.id ?? 'N/A'}</div>
+          <div>Coins: {user?.coins ?? 0}</div>
+          <div>Credits: {user?.credits ?? 0}</div>
+          <div>
+            Registered:{' '}
+            {user?.registration
+              ? new Date(user.registration).toLocaleDateString()
+              : 'N/A'}
+          </div>
         </div>
       </div>
 
       <div>
-        <pre>{JSON.stringify(rawData, null, 2)}</pre>
+        <pre className="text-xs overflow-auto">
+          {JSON.stringify(rawData, null, 2)}
+        </pre>
 
-        {me && <pre>{JSON.stringify(me, null, 2)}</pre>}
+        {user && (
+          <pre className="text-xs overflow-auto">
+            {JSON.stringify(user, null, 2)}
+          </pre>
+        )}
 
         <Button
           className="px-4 py-2 rounded-lg text-sm"

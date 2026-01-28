@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useRef } from 'react'
+import React, { Suspense, useRef, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { Model3D, type Model3DRef } from './Model3D'
@@ -28,6 +28,20 @@ export default function PreviewScene({
   onAnimationControlsReady,
 }: PreviewSceneProps) {
   const modelRef = useRef<Model3DRef>(null)
+  const [isPageVisible, setIsPageVisible] = useState(true)
+
+  // CRITICAL FIX: Pause 3D rendering when page is hidden to save CPU
+  // This prevents continuous GPU/CPU usage that triggers "crypto mining" detection
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(!document.hidden)
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
 
   return (
     <div className={className}>
@@ -40,6 +54,7 @@ export default function PreviewScene({
           gl={{ antialias: true, alpha: true }}
           dpr={[1, 2]}
           performance={{ min: 0.5 }}
+          frameloop={isPageVisible ? 'always' : 'never'}
         >
           <ambientLight intensity={DEFAULT_LIGHTING_CONFIG.ambient.intensity} />
           <directionalLight
