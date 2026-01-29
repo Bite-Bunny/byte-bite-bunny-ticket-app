@@ -1,16 +1,14 @@
 import { QueryClient } from '@tanstack/react-query'
-
-const staleTimeInMinutes =
-  Number(process.env.NEXT_PUBLIC_QUERY_STALE_TIME_IN_MINUTES) || 2
+import { queryCacheDefault } from '@/shared/config'
 
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: staleTimeInMinutes * 60 * 1000, // 2 minutes
-        refetchOnWindowFocus: false,
+        staleTime: queryCacheDefault.staleTime,
+        gcTime: queryCacheDefault.gcTime,
+        refetchOnWindowFocus: queryCacheDefault.refetchOnWindowFocus ?? false,
         retry: 1,
-        gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
       },
       mutations: {
         retry: 0,

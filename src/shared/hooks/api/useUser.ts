@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { userService, type User } from '@/core/api/services/user.service'
 import { getErrorMessage } from '@/core/api/types'
+import { queryCacheUser } from '@/shared/config'
 import { getQueryClient } from '@/shared/lib/query-client'
 
 // Query keys - centralized for consistency
@@ -9,25 +10,19 @@ export const userKeys = {
   me: () => [...userKeys.all, 'me'] as const,
 }
 
-// Cache duration constants
-const STALE_TIME = 5 * 60 * 1000 // 5 minutes - data considered fresh
-const GC_TIME = 30 * 60 * 1000 // 30 minutes - keep in cache
-
 /**
  * Hook to fetch current user data.
  * Uses React Query for automatic caching, refetching, and deduplication.
- *
- * The data is cached and will be reused across the app without refetching
- * as long as it's within the stale time (5 minutes).
+ * Cache settings: shared/config/query-cache.ts (user preset).
  */
 export function useUser() {
   return useQuery({
     queryKey: userKeys.me(),
     queryFn: userService.getMe,
-    staleTime: STALE_TIME,
-    gcTime: GC_TIME,
+    staleTime: queryCacheUser.staleTime,
+    gcTime: queryCacheUser.gcTime,
     retry: 2,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: queryCacheUser.refetchOnWindowFocus ?? false,
   })
 }
 
@@ -51,7 +46,7 @@ export async function prefetchUser(): Promise<void> {
   await queryClient.prefetchQuery({
     queryKey: userKeys.me(),
     queryFn: userService.getMe,
-    staleTime: STALE_TIME,
+    staleTime: queryCacheUser.staleTime,
   })
 }
 

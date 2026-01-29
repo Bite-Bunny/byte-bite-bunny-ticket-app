@@ -6,21 +6,44 @@ import Image from 'next/image'
 import { Star } from 'lucide-react'
 import { Card } from '@/shared/components/ui'
 import { Page } from '@/shared/components/Page'
+import { usePricing } from '@/shared/hooks/api'
+import { CreditsContentSkeleton } from './CreditsContent.skeleton'
+import type { PricingTier } from '@/core/api/services/credit.service'
 
+/** UI shape: credits + stars for display and purchase handler */
 interface CreditPackage {
   credits: number
   stars: number
 }
 
-const creditPackages: CreditPackage[] = [
-  { credits: 600, stars: 250 },
-  { credits: 1200, stars: 500 },
-  { credits: 2400, stars: 1000 },
-  { credits: 5000, stars: 2000 },
-]
+function mapPricingToPackage(tier: PricingTier): CreditPackage {
+  return { credits: tier.credit, stars: tier.star }
+}
 
 export function CreditsContent() {
   const t = useTranslations('credits')
+  const { data: pricing, isLoading, isError } = usePricing()
+
+  if (isLoading) {
+    return <CreditsContentSkeleton />
+  }
+
+  if (isError || !pricing?.length) {
+    return (
+      <Page>
+        <div className="flex flex-col w-full max-w-full min-h-0 py-4 items-center justify-center px-4">
+          <h1 className="text-center text-xl font-bold text-white mb-4">
+            {t('title')}
+          </h1>
+          <p className="text-center text-white/80 text-sm">
+            {isError ? t('errorLoading') : t('noPricing')}
+          </p>
+        </div>
+      </Page>
+    )
+  }
+
+  const creditPackages = pricing.map(mapPricingToPackage)
 
   const handlePurchase = (packageData: CreditPackage) => {
     // TODO: Implement Telegram Stars purchase

@@ -65,6 +65,8 @@
     "description": "Покупайте монеты используя Telegram Stars, чтобы разблокировать удивительные функции!",
     "purchaseInfo": "Заплатите {stars} Stars, чтобы получить {credits} Монет",
     "creditIconAlt": "Иконка монеты",
-    "purchaseCredits": "Купить Монеты"
+    "purchaseCredits": "Купить Монеты",
+    "errorLoading": "Не удалось загрузить цены. Попробуйте ещё раз.",
+    "noPricing": "Нет доступных цен."
   }
 }
