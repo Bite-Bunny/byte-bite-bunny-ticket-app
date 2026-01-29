@@ -110,10 +110,10 @@ function AnimatedComponent() {
     <PreviewScene
       modelPath="/models/animated-model.glb"
       animation={{
-        autoPlay: true,  // Start animation automatically
-        loop: true,      // Loop the animation
-        speed: 1,        // Normal speed (1 = normal, 2 = double, 0.5 = half)
-        name: 'Idle'     // Optional: specify animation name
+        autoPlay: true, // Start animation automatically
+        loop: true, // Loop the animation
+        speed: 1, // Normal speed (1 = normal, 2 = double, 0.5 = half)
+        name: 'Idle', // Optional: specify animation name
       }}
     />
   )
@@ -220,9 +220,9 @@ import { useModelAnimations } from '@/features/preview-scene'
 
 function AnimationDiscovery() {
   const animations = useModelAnimations('/models/character.glb')
-  
+
   // animations = ['Idle', 'Wave', 'Jump', 'Run']
-  
+
   return (
     <div>
       <p>Available animations:</p>
@@ -397,7 +397,7 @@ The application uses a **dual caching strategy** for optimal performance:
 
 ### Preloading Strategy
 
-Models listed in `PRELOAD_MODELS` (from `src/shared/lib/models.constants.ts`) are automatically preloaded when the app starts via `Providers.tsx`.
+Models are loaded **on-demand** when visiting pages that use them (e.g. `/inventory/preview`). Each page calls `useModelPreload(modelPath)` when it mounts, so the 3D asset (e.g. `regular-case.glb`) is only fetched when that page is actually used—not on every app load or refresh.
 
 ---
 
@@ -468,10 +468,10 @@ The preview-scene feature supports animations from Blender-exported GLB/GLTF fil
 
 ```tsx
 interface AnimationConfig {
-  autoPlay?: boolean  // Auto-play animation when model loads (default: false)
-  name?: string       // Animation name to play (uses first animation if not specified)
-  speed?: number      // Playback speed (1 = normal, 2 = double, 0.5 = half) (default: 1)
-  loop?: boolean      // Loop animation (default: true)
+  autoPlay?: boolean // Auto-play animation when model loads (default: false)
+  name?: string // Animation name to play (uses first animation if not specified)
+  speed?: number // Playback speed (1 = normal, 2 = double, 0.5 = half) (default: 1)
+  loop?: boolean // Loop animation (default: true)
 }
 ```
 
@@ -490,6 +490,7 @@ interface AnimationConfig {
 ```
 
 This is perfect when:
+
 - You don't know the animation names
 - Your model has multiple animations and you want them all to play
 - You want to play whatever animations are available
@@ -502,9 +503,9 @@ This is perfect when:
   modelPath="/models/animated-model.glb"
   animation={{
     autoPlay: true,
-    name: 'Wave',  // Play animation named "Wave"
+    name: 'Wave', // Play animation named "Wave"
     loop: true,
-    speed: 1.5     // Play at 1.5x speed
+    speed: 1.5, // Play at 1.5x speed
   }}
 />
 ```
@@ -516,8 +517,8 @@ This is perfect when:
   modelPath="/models/animated-model.glb"
   animation={{
     autoPlay: true,
-    speed: 0.5,  // Play at half speed
-    loop: true
+    speed: 0.5, // Play at half speed
+    loop: true,
   }}
 />
 ```
@@ -529,7 +530,7 @@ This is perfect when:
   modelPath="/models/animated-model.glb"
   animation={{
     autoPlay: true,
-    loop: false  // Play once and stop
+    loop: false, // Play once and stop
   }}
 />
 ```
@@ -554,10 +555,10 @@ function AnimationSelector() {
         animation={{
           autoPlay: true,
           name: currentAnimation,
-          loop: true
+          loop: true,
         }}
       />
-      
+
       <div className="flex gap-2 mt-4">
         {animations.map((anim) => (
           <button
@@ -600,6 +601,7 @@ In Blender, animations are created as **Actions** (also called Animation Data). 
 You can discover animation names in several ways:
 
 1. **Use the hook:**
+
 ```tsx
 import { useModelAnimations } from '@/features/preview-scene'
 
