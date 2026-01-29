@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import { showDailyCase } from '@/features/daily-case'
+import { Button } from '@/shared/components/ui/Button'
 
 // Lazy load components to reduce initial JavaScript execution time
 const TicketFeedLive = dynamic(
@@ -47,6 +49,7 @@ function getDailyCase() {
 export default function HomeContent() {
   const [showTickets, setShowTickets] = useState(false)
   const dailyCase = getDailyCase()
+  const shouldReduceMotion = useReducedMotion()
 
   if (showTickets) {
     return (
@@ -58,17 +61,45 @@ export default function HomeContent() {
     )
   }
 
+  const breatheScale = shouldReduceMotion ? 1 : [1, 1.04, 1]
+  const breatheTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 2.2, repeat: Infinity, ease: 'easeInOut' as const }
+  const glowOpacity = shouldReduceMotion ? 0.25 : [0.2, 0.45, 0.2]
+  const glowTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 2.2, repeat: Infinity, ease: 'easeInOut' as const }
+
   return (
     <div className="fixed inset-0 w-screen h-screen flex items-center justify-center">
-      <button
-        onClick={() => setShowTickets(true)}
-        className="px-16 py-8 text-3xl font-bold rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 active:from-amber-800 active:to-amber-900 text-white shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 border-2 border-amber-500/50 hover:border-amber-400/70"
-        style={{
-          WebkitTapHighlightColor: 'transparent',
-        }}
+      <motion.div
+        className="relative flex items-center justify-center"
+        initial={false}
+        animate={{ scale: breatheScale }}
+        transition={breatheTransition}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.96 }}
       >
-        Start
-      </button>
+        {/* Pulsing glow behind button */}
+        <motion.span
+          className="absolute rounded-full bg-white/40 blur-3xl -z-10 pointer-events-none"
+          style={{
+            width: '160%',
+            height: '160%',
+            left: '-30%',
+            top: '-30%',
+          }}
+          animate={{ opacity: glowOpacity }}
+          transition={glowTransition}
+          aria-hidden
+        />
+        <Button
+          onClick={() => setShowTickets(true)}
+          className="w-36 h-36 md:w-44 md:h-44 rounded-full text-2xl md:text-3xl font-bold relative z-0"
+        >
+          Start
+        </Button>
+      </motion.div>
     </div>
   )
 }
