@@ -305,20 +305,20 @@ export function CasesContent() {
 
           <DrawerBody>
             {/* Case Image */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-6 max-h-667:mb-4 max-h-568:mb-3">
               {selectedCase && (
                 <Image
                   src={selectedCase.image}
                   alt={selectedCase.name}
                   width={180}
                   height={180}
-                  className="object-contain"
+                  className="object-contain max-h-667:w-[160px] max-h-667:h-[160px] max-h-568:w-[140px] max-h-568:h-[140px]"
                 />
               )}
             </div>
 
             {/* Possible Rewards */}
-            <div className="space-y-3 pb-6">
+            <div className="space-y-3 pb-6 max-h-667:space-y-2 max-h-667:pb-4 max-h-568:space-y-2 max-h-568:pb-3">
               <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">
                 Possible Rewards
               </h3>
@@ -327,9 +327,9 @@ export function CasesContent() {
                 return (
                   <div
                     key={reward.id}
-                    className={`flex items-center gap-3 p-3 rounded-xl ${style.bg} border ${style.border}`}
+                    className={`flex items-center gap-3 p-3 rounded-xl max-h-568:gap-2 max-h-568:p-2 ${style.bg} border ${style.border}`}
                   >
-                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
+                    <div className="relative w-12 h-12 max-h-568:w-10 max-h-568:h-10 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
                       <Image
                         src={reward.image}
                         alt={reward.name}
@@ -357,13 +357,13 @@ export function CasesContent() {
           <DrawerFooter>
             <Button
               onClick={handleCloseDrawer}
-              className="flex-1 py-3 rounded-xl text-white/70"
+              className="flex-1 py-3 max-h-568:py-2 rounded-xl text-white/70"
             >
               Cancel
             </Button>
             <Button
               onClick={handleOpenCase}
-              className="flex-1 py-3 rounded-xl bg-brand/80 hover:bg-brand border-brand/50"
+              className="flex-1 py-3 max-h-568:py-2 rounded-xl bg-brand/80 hover:bg-brand border-brand/50"
             >
               <div className="flex items-center gap-2">
                 <div className="relative w-5 h-5">

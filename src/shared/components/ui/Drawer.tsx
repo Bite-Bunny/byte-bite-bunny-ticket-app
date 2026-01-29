@@ -89,7 +89,10 @@ export const DrawerContent = ({ className, children }: DrawerContentProps) => {
         onDragEnd={handleDragEnd}
         className={cn(
           'fixed bottom-0 left-0 right-0 z-[1002]',
-          'max-h-[85vh] overflow-hidden',
+          'flex flex-col overflow-hidden',
+          'max-h-[85vh]',
+          'max-h-667:h-[100dvh] max-h-568:h-[100dvh]',
+          'max-h-667:rounded-none max-h-568:rounded-none',
           'bg-white/10 backdrop-blur-[20px] border border-white/15 border-b-0',
           'rounded-t-3xl',
           className,
@@ -101,10 +104,10 @@ export const DrawerContent = ({ className, children }: DrawerContentProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drag handle indicator */}
-        <div className="flex justify-center pt-4 pb-2 cursor-grab active:cursor-grabbing touch-none">
+        <div className="flex shrink-0 justify-center pt-4 pb-2 max-h-667:pt-3 max-h-667:pb-1.5 max-h-568:pt-2 max-h-568:pb-1 cursor-grab active:cursor-grabbing touch-none">
           <div className="w-12 h-1.5 rounded-full bg-white/30" />
         </div>
-        {children}
+        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
       </motion.div>
     </>
   )
@@ -126,7 +129,8 @@ export const DrawerHeader = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between px-6 py-4 border-b border-white/10',
+        'flex shrink-0 items-center justify-between px-6 py-4 border-b border-white/10',
+        'max-h-667:px-4 max-h-667:py-3 max-h-568:px-3 max-h-568:py-2',
         className,
       )}
     >
@@ -190,7 +194,13 @@ export const DrawerBody = ({
 }: ComponentProps<'div'>) => {
   return (
     <div
-      className={cn('px-6 py-4 overflow-y-auto max-h-[60vh]', className)}
+      className={cn(
+        'overflow-y-auto px-6 py-4 max-h-[60vh]',
+        'max-h-667:min-h-0 max-h-667:flex-1 max-h-667:max-h-none',
+        'max-h-568:min-h-0 max-h-568:flex-1 max-h-568:max-h-none',
+        'max-h-667:px-4 max-h-568:px-3 max-h-568:py-3',
+        className,
+      )}
       {...props}
     >
       {children}
@@ -205,7 +215,11 @@ export const DrawerFooter = ({
 }: ComponentProps<'div'>) => {
   return (
     <div
-      className={cn('px-6 py-4 border-t border-white/10 flex gap-3', className)}
+      className={cn(
+        'flex shrink-0 gap-3 border-t border-white/10 px-6 py-4',
+        'max-h-667:px-4 max-h-667:py-3 max-h-568:px-3 max-h-568:py-2',
+        className,
+      )}
       {...props}
     >
       {children}

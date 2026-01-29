@@ -32,6 +32,7 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       screens: {
+        'max-h-568': { raw: '(max-height: 568px)' }, // iPhone SE 1st gen, very small
         'max-h-667': { raw: '(max-height: 667px)' },
         violet: '768px', // Custom breakpoint for violet theme
       },
