@@ -24,6 +24,10 @@ export interface PreviewSceneProps {
    * Callback to receive animation controls for programmatic control
    */
   onAnimationControlsReady?: (controls: AnimationControls) => void
+  /**
+   * Called when a non-looping animation finishes (passed to animation config).
+   */
+  onAnimationEnd?: () => void
 }
 
 export interface AnimationConfig {
@@ -56,6 +60,10 @@ export interface AnimationConfig {
    * @default false
    */
   holdAtEnd?: boolean
+  /**
+   * Called when a non-looping animation finishes (e.g. case opening).
+   */
+  onAnimationEnd?: () => void
 }
 
 /**

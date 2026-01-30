@@ -26,6 +26,7 @@ export function PersistentLayout({ children }: PersistentLayoutProps) {
   const isKnownRoute = [
     '/',
     '/cases',
+    '/cases/open',
     '/inventory',
     '/settings',
     '/credits',

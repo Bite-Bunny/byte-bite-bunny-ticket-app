@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useRef, useState, useEffect } from 'react'
+import { Suspense, useRef, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { Model3D, type Model3DRef } from './Model3D'
@@ -12,20 +12,13 @@ import {
 } from '../config/preview.config'
 import '@/css/preview.css'
 
-/**
- * Reusable 3D Preview Scene component
- *
- * @example
- * ```tsx
- * <PreviewScene modelPath="/models/regular-case.glb" />
- * ```
- */
 export default function PreviewScene({
   modelPath,
   fallback = null,
   className = 'w-full h-full relative',
   animation,
   onAnimationControlsReady,
+  onAnimationEnd,
 }: PreviewSceneProps) {
   const modelRef = useRef<Model3DRef>(null)
   const [isPageVisible, setIsPageVisible] = useState(true)
@@ -68,7 +61,11 @@ export default function PreviewScene({
           <Model3D
             ref={modelRef}
             modelPath={modelPath}
-            animation={animation}
+            animation={
+              onAnimationEnd && animation
+                ? { ...animation, onAnimationEnd }
+                : animation
+            }
             onControlsReady={onAnimationControlsReady}
           />
           <OrbitControls

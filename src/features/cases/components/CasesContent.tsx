@@ -17,9 +17,13 @@ import {
   DrawerFooter,
 } from '@/shared/components/ui'
 import { Page } from '@/shared/components/Page'
-import { useCasesFeed } from '@/shared/hooks/api'
+import { useCasesFeed, invalidateUserCache } from '@/shared/hooks/api'
 import { mapCasesFeedToCaseItems, type CaseItem } from '../utils/map-cases-feed'
 import { rarityStyles } from '../config'
+import { casesService } from '@/core/api/services/cases.service'
+import { getErrorMessage } from '@/core/api/types'
+
+const CASE_OPEN_RESULT_KEY = 'caseOpenResult'
 
 export function CasesContent() {
   const t = useTranslations('cases')
@@ -31,6 +35,8 @@ export function CasesContent() {
   )
   const [selectedCase, setSelectedCase] = useState<CaseItem | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isOpening, setIsOpening] = useState(false)
+  const [openError, setOpenError] = useState<string | null>(null)
 
   if (isLoading) {
     return (
@@ -69,11 +75,20 @@ export function CasesContent() {
     setIsDrawerOpen(false)
   }
 
-  const handleOpenCase = () => {
-    if (selectedCase) {
-      // TODO: Implement case opening logic
-      console.log('Opening case:', selectedCase)
+  const handleOpenCase = async () => {
+    if (!selectedCase) return
+    setOpenError(null)
+    setIsOpening(true)
+    try {
+      const result = await casesService.openCase(Number(selectedCase.id))
+      sessionStorage.setItem(CASE_OPEN_RESULT_KEY, JSON.stringify(result))
+      await invalidateUserCache()
       setIsDrawerOpen(false)
+      router.push('/cases/open')
+    } catch (err) {
+      setOpenError(getErrorMessage(err))
+    } finally {
+      setIsOpening(false)
     }
   }
 
@@ -224,16 +239,21 @@ export function CasesContent() {
             </div>
           </DrawerBody>
 
+          {openError && (
+            <p className="text-red-400 text-sm px-4 pb-2">{openError}</p>
+          )}
           <DrawerFooter>
             <Button
               onClick={handleCloseDrawer}
               className="flex-1 py-3 max-h-568:py-2 rounded-xl text-white/70"
+              disabled={isOpening}
             >
               Cancel
             </Button>
             <Button
               onClick={handleOpenCase}
               className="flex-1 py-3 max-h-568:py-2 rounded-xl bg-brand/80 hover:bg-brand border-brand/50"
+              disabled={isOpening}
             >
               <div className="flex items-center gap-2">
                 <div className="relative w-5 h-5">
@@ -245,7 +265,9 @@ export function CasesContent() {
                   />
                 </div>
                 <span className="font-semibold text-white">
-                  {selectedCase?.credits.toLocaleString()}
+                  {isOpening
+                    ? 'Opening...'
+                    : selectedCase?.credits.toLocaleString()}
                 </span>
               </div>
             </Button>

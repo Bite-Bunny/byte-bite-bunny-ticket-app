@@ -10,9 +10,6 @@ import type { AnimationConfig, AnimationControls } from '../types'
 interface Model3DProps {
   modelPath: string
   animation?: AnimationConfig
-  /**
-   * Optional callback to receive animation controls
-   */
   onControlsReady?: (controls: AnimationControls) => void
 }
 
@@ -244,8 +241,26 @@ export const Model3D = forwardRef<Model3DRef, Model3DProps>(
         }
       })
 
+      const mixer = mixerRef.current
+      const onEnd = animation?.onAnimationEnd
+      const targetCount = targetActions.length
+      let finishedCount = 0
+      const handleFinished = () => {
+        finishedCount += 1
+        if (finishedCount >= targetCount) {
+          isPlayingRef.current = false
+          mixer?.removeEventListener('finished', handleFinished)
+          onEnd?.()
+        }
+      }
+      if (mixer && !loop && onEnd && targetCount > 0) {
+        mixer.addEventListener('finished', handleFinished)
+      }
+
       return () => {
-        // Stop animations when config changes or component unmounts
+        if (mixer && !loop && onEnd) {
+          mixer.removeEventListener('finished', handleFinished)
+        }
         actions.forEach((action) => {
           action.stop()
         })

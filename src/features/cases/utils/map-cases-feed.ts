@@ -88,3 +88,14 @@ export function mapCasesFeedItemToCaseItem(feedItem: CasesFeedItem): CaseItem {
 export function mapCasesFeedToCaseItems(feed: CasesFeedItem[]): CaseItem[] {
   return feed.map(mapCasesFeedItemToCaseItem)
 }
+
+/** Map open-case API result items to display { name, image }. */
+export function mapOpenCaseItemsToDisplay(
+  items: CaseContentItem[],
+): { id: string; name: string; image: string }[] {
+  return items.map((item, i) => ({
+    id: `reward-${i}`,
+    name: itemLabel(item),
+    image: itemImage(item),
+  }))
+}
