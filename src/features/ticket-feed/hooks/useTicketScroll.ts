@@ -14,6 +14,8 @@ import {
 interface UseTicketScrollProps {
   tickets: TicketData[]
   containerRef: React.RefObject<HTMLDivElement>
+  /** When user swipes/drags to "next" past the last ticket. */
+  onRequestNext?: () => void
 }
 
 interface UseTicketScrollReturn {
@@ -33,6 +35,7 @@ interface UseTicketScrollReturn {
 export const useTicketScroll = ({
   tickets,
   containerRef,
+  onRequestNext,
 }: UseTicketScrollProps): UseTicketScrollReturn => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -41,6 +44,24 @@ export const useTicketScroll = ({
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const animationFrameRef = useRef<number | null>(null)
   const isMountedRef = useRef(true)
+  const prevTicketsLengthRef = useRef(tickets.length)
+
+  // When a new ticket is appended (e.g. after requestNextTicket), scroll to it
+  useEffect(() => {
+    const prevLength = prevTicketsLengthRef.current
+    prevTicketsLengthRef.current = tickets.length
+    if (
+      tickets.length > prevLength &&
+      currentIndex === tickets.length - 2 &&
+      containerRef.current
+    ) {
+      const container = containerRef.current
+      const itemHeight = container.clientHeight
+      const targetScroll = (tickets.length - 1) * itemHeight
+      container.scrollTo({ top: targetScroll, behavior: 'smooth' })
+      setCurrentIndex(tickets.length - 1)
+    }
+  }, [tickets.length, currentIndex, containerRef])
 
   // Handle scroll to snap to nearest ticket
   useEffect(() => {
@@ -142,10 +163,12 @@ export const useTicketScroll = ({
     }, SCROLL_COMPLETION_CHECK_DELAY)
   }
 
-  // Navigate to next ticket
+  // Navigate to next ticket, or request new one when at last
   const scrollNext = () => {
     if (currentIndex < tickets.length - 1) {
       scrollToIndex(currentIndex + 1)
+    } else if (onRequestNext) {
+      onRequestNext()
     }
   }
 
@@ -201,6 +224,16 @@ export const useTicketScroll = ({
       let newIndex = currentIndex
       if (delta > 0 && currentIndex < tickets.length - 1) {
         newIndex = currentIndex + 1
+      } else if (
+        delta > 0 &&
+        currentIndex === tickets.length - 1 &&
+        onRequestNext
+      ) {
+        onRequestNext()
+        setTimeout(() => {
+          wheelScrolling = false
+        }, WHEEL_SCROLL_TIMEOUT)
+        return
       } else if (delta < 0 && currentIndex > 0) {
         newIndex = currentIndex - 1
       }
@@ -215,7 +248,7 @@ export const useTicketScroll = ({
     container.addEventListener('wheel', handleWheel, { passive: false })
     return () => container.removeEventListener('wheel', handleWheel)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tickets.length, isDragging, containerRef])
+  }, [tickets.length, isDragging, containerRef, onRequestNext])
 
   // Handle drag gesture
   const handleDragStart = () => {
@@ -261,6 +294,13 @@ export const useTicketScroll = ({
       // Fast swipe - go to next/previous based on velocity direction
       if (velocity < 0 && currentIndex < tickets.length - 1) {
         targetIndex = currentIndex + 1
+      } else if (
+        velocity < 0 &&
+        currentIndex === tickets.length - 1 &&
+        onRequestNext
+      ) {
+        onRequestNext()
+        return
       } else if (velocity > 0 && currentIndex > 0) {
         targetIndex = currentIndex - 1
       }
@@ -268,6 +308,13 @@ export const useTicketScroll = ({
       // Slow drag but past threshold
       if (dragDistance > 0 && currentIndex < tickets.length - 1) {
         targetIndex = currentIndex + 1
+      } else if (
+        dragDistance > 0 &&
+        currentIndex === tickets.length - 1 &&
+        onRequestNext
+      ) {
+        onRequestNext()
+        return
       } else if (dragDistance < 0 && currentIndex > 0) {
         targetIndex = currentIndex - 1
       }

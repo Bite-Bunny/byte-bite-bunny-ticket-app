@@ -1,20 +1,24 @@
 'use client'
 
-import React, { useRef, useMemo } from 'react'
+import React, { useRef, useMemo, useCallback } from 'react'
 import { cn } from '@/shared/lib/cn'
-import { TicketFeedProps } from './types'
+import { TicketFeedProps, TicketFeedLiveProps } from './types'
 import { useTicketScroll } from './hooks/useTicketScroll'
 import { ScrollableContainer } from './components/ScrollableContainer'
 import { TicketSlide } from './components/TicketSlide'
 import { ScrollIndicator } from './components/ScrollIndicator'
 import { NavigationButtons } from './components/NavigationButtons'
 import { generateTickets } from './utils/generateTickets'
-import { useTicketSession } from './hooks/useTicketSession'
 
 // Only render visible tickets + buffer to reduce TBT
 const VISIBLE_BUFFER = 2 // Render 2 tickets before and after visible one
 
-export const TicketFeed = ({ tickets, className }: TicketFeedProps) => {
+export const TicketFeed = ({
+  tickets,
+  className,
+  onRequestNext,
+  isLoadingNext,
+}: TicketFeedProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
   const {
@@ -28,7 +32,13 @@ export const TicketFeed = ({ tickets, className }: TicketFeedProps) => {
   } = useTicketScroll({
     tickets,
     containerRef,
+    onRequestNext,
   })
+
+  const handleNext = useCallback(() => {
+    if (currentIndex < tickets.length - 1) scrollNext()
+    else onRequestNext?.()
+  }, [currentIndex, tickets.length, scrollNext, onRequestNext])
 
   // Only render visible tickets + buffer to reduce initial render cost
   const visibleTickets = useMemo(() => {
@@ -105,7 +115,9 @@ export const TicketFeed = ({ tickets, className }: TicketFeedProps) => {
         currentIndex={currentIndex}
         totalCount={tickets.length}
         onPrevious={scrollPrevious}
-        onNext={scrollNext}
+        onNext={handleNext}
+        onRequestNext={onRequestNext}
+        isLoadingNext={isLoadingNext}
       />
     </div>
   )
@@ -126,22 +138,36 @@ export const TicketFeedWithData = React.memo(
 
 /**
  * Live ticket feed powered by the session WebSocket.
- * This is what the main app should use instead of mock data.
+ * Receives session state from parent (e.g. HomeContent) so the socket is
+ * created only when Start is clicked and one hook instance owns the session.
  */
 export const TicketFeedLive = React.memo(
-  (props: Omit<TicketFeedProps, 'tickets'>) => {
-    const { tickets, status } = useTicketSession()
-
-    // Until we have at least one real ticket, keep a lightweight
-    // full-screen loader instead of rendering the heavy 3D feed.
+  ({
+    tickets,
+    status,
+    error,
+    requestNextTicket,
+    isRequestingNext,
+    className,
+  }: TicketFeedLiveProps) => {
+    // Until we have at least one real ticket, show loader or error
     if (tickets.length === 0) {
       return (
         <div className="fixed inset-0 flex items-center justify-center text-white text-xl font-semibold">
-          {status === 'error' ? 'Failed to load tickets' : 'Loading tickets...'}
+          {status === 'error' || error
+            ? (error ?? 'Failed to load tickets')
+            : 'Loading tickets...'}
         </div>
       )
     }
 
-    return <TicketFeed tickets={tickets} {...props} />
+    return (
+      <TicketFeed
+        tickets={tickets}
+        className={className}
+        onRequestNext={requestNextTicket}
+        isLoadingNext={isRequestingNext}
+      />
+    )
   },
 )

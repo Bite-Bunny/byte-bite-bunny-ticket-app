@@ -11,8 +11,12 @@ export const NavigationButtons = ({
   totalCount,
   onPrevious,
   onNext,
+  onRequestNext,
+  isLoadingNext,
 }: NavigationButtonsProps) => {
   const t = useTranslations('ticketFeed')
+  const isAtLast = currentIndex === totalCount - 1
+  const nextDisabled = (isAtLast && !onRequestNext) || isLoadingNext === true
 
   return (
     <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2 pointer-events-auto">
@@ -42,7 +46,7 @@ export const NavigationButtons = ({
 
       <motion.button
         onClick={onNext}
-        disabled={currentIndex === totalCount - 1}
+        disabled={nextDisabled}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.5 }}

@@ -5,9 +5,11 @@ import { motion, useReducedMotion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import { showDailyCase } from '@/features/daily-case'
 import { Button } from '@/shared/components/ui/Button'
+import { useTicketSession } from '@/features/ticket-feed/hooks/useTicketSession'
+import type { TicketFeedLiveProps } from '@/features/ticket-feed'
 
 // Lazy load components to reduce initial JavaScript execution time
-const TicketFeedLive = dynamic(
+const TicketFeedLive = dynamic<TicketFeedLiveProps>(
   () =>
     import('@/features/ticket-feed').then((mod) => ({
       default: mod.TicketFeedLive,
@@ -50,11 +52,23 @@ export default function HomeContent() {
   const [showTickets, setShowTickets] = useState(false)
   const dailyCase = getDailyCase()
   const shouldReduceMotion = useReducedMotion()
+  const session = useTicketSession()
+
+  const handleStart = () => {
+    session.startSession()
+    setShowTickets(true)
+  }
 
   if (showTickets) {
     return (
       <>
-        <TicketFeedLive />
+        <TicketFeedLive
+          tickets={session.tickets}
+          status={session.status}
+          error={session.error}
+          requestNextTicket={session.requestNextTicket}
+          isRequestingNext={session.isRequestingNext}
+        />
         {showDailyCase(dailyCase) && <DailyCase />}
         <CreditsNavigationButton />
       </>
@@ -94,7 +108,7 @@ export default function HomeContent() {
           aria-hidden
         />
         <Button
-          onClick={() => setShowTickets(true)}
+          onClick={handleStart}
           className="w-36 h-36 md:w-44 md:h-44 rounded-full text-2xl md:text-3xl font-bold relative z-0"
         >
           Start

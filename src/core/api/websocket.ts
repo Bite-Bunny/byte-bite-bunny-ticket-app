@@ -1,54 +1,71 @@
-import { baseURL } from './config'
 import { getAuthHeader } from './instance'
 
+const WS_HOST_PATH = 'api.bbt-tg.xyz/api/session/'
+
 /**
- * Build the WebSocket URL for the session stream based on the HTTP base URL.
- * Falls back to the provided ws URL if something goes wrong.
- *
- * Default HTTP base URL is https://api.bbt-tg.xyz, which becomes
- * wss://api.bbt-tg.xyz/api/session for WebSocket connections.
+ * Resolve WebSocket URL. Uses wss when the page is HTTPS (avoids mixed-content / 1006);
+ * otherwise ws. Override with NEXT_PUBLIC_WS_SESSION_URL if needed.
  */
-const getSessionWebSocketUrl = (): string => {
-  try {
-    const url = new URL(baseURL)
-
-    // Translate HTTP(S) to WS(S)
-    if (url.protocol === 'https:') {
-      url.protocol = 'wss:'
-    } else if (url.protocol === 'http:') {
-      url.protocol = 'ws:'
-    }
-
-    url.pathname = '/api/session'
-    url.search = ''
-
-    return url.toString()
-  } catch {
-    // Hard fallback in case baseURL is misconfigured
-    return 'ws://api.bbt-tg.xyz/api/session'
+function getSessionWebSocketUrl(): string {
+  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_WS_SESSION_URL) {
+    return process.env.NEXT_PUBLIC_WS_SESSION_URL
   }
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    return `${protocol}//${WS_HOST_PATH}`
+  }
+  return `ws://${WS_HOST_PATH}`
+}
+
+/** Redact auth query param for safe console logging */
+function getUrlForLogging(url: URL): string {
+  const u = new URL(url.toString())
+  if (u.searchParams.has('auth')) {
+    u.searchParams.set('auth', '[REDACTED]')
+  }
+  return u.toString()
 }
 
 /**
  * Creates an authenticated WebSocket connection to the ticket session endpoint.
- *
- * We can't set custom headers in browser WebSockets, so we pass the same
- * Authorization value that Axios uses as a query parameter. The backend
- * should read this and validate it in the same way.
+ * Browser WebSockets cannot set custom headers, so the same Authorization value
+ * used by Axios is passed as a query parameter for the backend to validate.
  */
 export const createSessionWebSocket = (): WebSocket | null => {
   if (typeof window === 'undefined') {
+    console.warn(
+      '[WebSocket] Cannot create socket: not in browser (window is undefined)',
+    )
     return null
   }
 
-  const rawUrl = getSessionWebSocketUrl()
+  const baseUrl = getSessionWebSocketUrl()
+  const url = new URL(baseUrl)
   const authHeader = getAuthHeader()
-
-  const url = new URL(rawUrl)
 
   if (authHeader) {
     url.searchParams.set('auth', authHeader)
+    console.log(
+      '[WebSocket] Connecting with auth (query param). URL:',
+      getUrlForLogging(url),
+    )
+  } else {
+    console.warn(
+      '[WebSocket] Connecting WITHOUT auth — getAuthHeader() returned nothing. URL:',
+      getUrlForLogging(url),
+    )
   }
 
-  return new WebSocket(url.toString())
+  try {
+    const ws = new WebSocket(url.toString())
+    console.log(
+      '[WebSocket] Socket created, readyState:',
+      ws.readyState,
+      '(0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED)',
+    )
+    return ws
+  } catch (err) {
+    console.error('[WebSocket] Failed to create WebSocket:', err)
+    return null
+  }
 }

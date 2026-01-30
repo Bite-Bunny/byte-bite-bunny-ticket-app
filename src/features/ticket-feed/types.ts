@@ -12,6 +12,20 @@ export interface TicketData {
 export interface TicketFeedProps {
   tickets: TicketData[]
   className?: string
+  /** When user requests "next" at the last ticket (swipe or down button). */
+  onRequestNext?: () => void
+  /** True while waiting for the next ticket from the backend. */
+  isLoadingNext?: boolean
+}
+
+/** Props for the live ticket feed when session is owned by parent (e.g. HomeContent). */
+export interface TicketFeedLiveProps {
+  tickets: TicketData[]
+  status: 'idle' | 'connecting' | 'open' | 'closed' | 'error'
+  error: string | null
+  requestNextTicket: () => void
+  isRequestingNext: boolean
+  className?: string
 }
 
 export interface TicketSlideProps {
@@ -31,6 +45,9 @@ export interface NavigationButtonsProps {
   totalCount: number
   onPrevious: () => void
   onNext: () => void
+  /** When at last ticket, next button requests a new ticket instead of scrolling. */
+  onRequestNext?: () => void
+  isLoadingNext?: boolean
 }
 
 export interface ScrollableContainerProps {
