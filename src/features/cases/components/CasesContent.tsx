@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -17,176 +17,48 @@ import {
   DrawerFooter,
 } from '@/shared/components/ui'
 import { Page } from '@/shared/components/Page'
-
-interface CaseReward {
-  id: string
-  name: string
-  image: string
-  chance: number
-  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
-}
-
-interface CaseItem {
-  id: string
-  name: string
-  credits: number
-  image: string
-  description: string
-  rewards: CaseReward[]
-}
-
-const rarityStyles = {
-  common: {
-    bg: 'bg-gray-500/20',
-    border: 'border-gray-400/30',
-    text: 'text-gray-300',
-    label: 'Common',
-  },
-  uncommon: {
-    bg: 'bg-green-500/20',
-    border: 'border-green-400/30',
-    text: 'text-green-300',
-    label: 'Uncommon',
-  },
-  rare: {
-    bg: 'bg-blue-500/20',
-    border: 'border-blue-400/30',
-    text: 'text-blue-300',
-    label: 'Rare',
-  },
-  epic: {
-    bg: 'bg-purple-500/20',
-    border: 'border-purple-400/30',
-    text: 'text-purple-300',
-    label: 'Epic',
-  },
-  legendary: {
-    bg: 'bg-yellow-500/20',
-    border: 'border-yellow-400/30',
-    text: 'text-yellow-300',
-    label: 'Legendary',
-  },
-}
-
-const mockCases: CaseItem[] = [
-  {
-    id: '1',
-    name: 'Silver Case',
-    credits: 100,
-    image: '/cases/silver-case.png',
-    description: 'A basic case with common rewards. Great for beginners!',
-    rewards: [
-      {
-        id: 's1',
-        name: 'Copper Ticket',
-        image: '/inventory-items/copper-ticket.png',
-        chance: 45,
-        rarity: 'common',
-      },
-      {
-        id: 's2',
-        name: 'Silver Ticket',
-        image: '/inventory-items/silver-ticket.png',
-        chance: 30,
-        rarity: 'uncommon',
-      },
-      {
-        id: 's3',
-        name: 'Carrot',
-        image: '/inventory-items/carrot.png',
-        chance: 20,
-        rarity: 'rare',
-      },
-      {
-        id: 's4',
-        name: 'Gold Ticket',
-        image: '/inventory-items/gold-ticket.png',
-        chance: 5,
-        rarity: 'epic',
-      },
-    ],
-  },
-  {
-    id: '2',
-    name: 'Gold Case',
-    credits: 200,
-    image: '/cases/gold-case.png',
-    description: 'Premium case with better odds for rare items.',
-    rewards: [
-      {
-        id: 'g1',
-        name: 'Silver Ticket',
-        image: '/inventory-items/silver-ticket.png',
-        chance: 35,
-        rarity: 'common',
-      },
-      {
-        id: 'g2',
-        name: 'Gold Ticket',
-        image: '/inventory-items/gold-ticket.png',
-        chance: 30,
-        rarity: 'uncommon',
-      },
-      {
-        id: 'g3',
-        name: 'Carrot',
-        image: '/inventory-items/carrot.png',
-        chance: 25,
-        rarity: 'rare',
-      },
-      {
-        id: 'g4',
-        name: 'Diamond Ticket',
-        image: '/inventory-items/diamond-ticket.png',
-        chance: 10,
-        rarity: 'legendary',
-      },
-    ],
-  },
-  {
-    id: '3',
-    name: 'Diamond Case',
-    credits: 300,
-    image: '/cases/diamond-case.png',
-    description: 'The ultimate case with the best chances for legendary items!',
-    rewards: [
-      {
-        id: 'd1',
-        name: 'Gold Ticket',
-        image: '/inventory-items/gold-ticket.png',
-        chance: 30,
-        rarity: 'common',
-      },
-      {
-        id: 'd2',
-        name: 'Carrot',
-        image: '/inventory-items/carrot.png',
-        chance: 30,
-        rarity: 'uncommon',
-      },
-      {
-        id: 'd3',
-        name: 'Diamond Ticket',
-        image: '/inventory-items/diamond-ticket.png',
-        chance: 25,
-        rarity: 'rare',
-      },
-      {
-        id: 'd4',
-        name: 'Diamond Ticket x3',
-        image: '/inventory-items/diamond-ticket.png',
-        chance: 15,
-        rarity: 'legendary',
-      },
-    ],
-  },
-]
+import { useCasesFeed } from '@/shared/hooks/api'
+import { mapCasesFeedToCaseItems, type CaseItem } from '../utils/map-cases-feed'
+import { rarityStyles } from '../config'
 
 export function CasesContent() {
   const t = useTranslations('cases')
   const router = useRouter()
+  const { data: feed, isLoading, isError } = useCasesFeed()
+  const casesList = useMemo(
+    () => (feed ? mapCasesFeedToCaseItems(feed) : []),
+    [feed],
+  )
   const [selectedCase, setSelectedCase] = useState<CaseItem | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  if (isLoading) {
+    return (
+      <Page>
+        <div className="flex flex-col w-full max-w-full min-h-0 py-4 items-center justify-center px-4">
+          <h1 className="text-center text-2xl md:text-3xl font-bold text-white mb-6 mt-2">
+            {t('title')}
+          </h1>
+          <p className="text-white/70">Loading cases...</p>
+        </div>
+      </Page>
+    )
+  }
+
+  if (isError || !casesList.length) {
+    return (
+      <Page>
+        <div className="flex flex-col w-full max-w-full min-h-0 py-4 items-center justify-center px-4">
+          <h1 className="text-center text-2xl md:text-3xl font-bold text-white mb-6 mt-2">
+            {t('title')}
+          </h1>
+          <p className="text-center text-white/80 text-sm">
+            {isError ? 'Failed to load cases.' : 'No cases available.'}
+          </p>
+        </div>
+      </Page>
+    )
+  }
 
   const handleCaseClick = (caseItem: CaseItem) => {
     setSelectedCase(caseItem)
@@ -242,7 +114,7 @@ export function CasesContent() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 w-full max-w-4xl mx-auto pb-24">
-          {mockCases.map((caseItem, index) => (
+          {casesList.map((caseItem, index) => (
             <motion.div
               key={caseItem.id}
               initial={false}
@@ -304,7 +176,6 @@ export function CasesContent() {
           </DrawerHeader>
 
           <DrawerBody>
-            {/* Case Image */}
             <div className="flex justify-center mb-6 max-h-667:mb-4 max-h-568:mb-3">
               {selectedCase && (
                 <Image
@@ -317,7 +188,6 @@ export function CasesContent() {
               )}
             </div>
 
-            {/* Possible Rewards */}
             <div className="space-y-3 pb-6 max-h-667:space-y-2 max-h-667:pb-4 max-h-568:space-y-2 max-h-568:pb-3">
               <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">
                 Possible Rewards

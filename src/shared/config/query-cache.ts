@@ -34,9 +34,17 @@ export const queryCacheUser: QueryCachePreset = {
   refetchOnWindowFocus: false,
 }
 
+/** Cases feed. Long freshness so tab re-entry does not refetch. */
+export const queryCacheCasesFeed: QueryCachePreset = {
+  staleTime: 30 * MIN,
+  gcTime: 60 * MIN,
+  refetchOnWindowFocus: false,
+}
+
 /** Lookup by module name for programmatic use. */
 export const queryCacheByModule = {
   default: queryCacheDefault,
   pricing: queryCachePricing,
   user: queryCacheUser,
+  casesFeed: queryCacheCasesFeed,
 } as const
