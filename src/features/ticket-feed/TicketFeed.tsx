@@ -137,7 +137,7 @@ export const TicketFeedWithData = React.memo(
 )
 
 /**
- * Live ticket feed powered by the session WebSocket.
+ * Live ticket feed powered by the ticket-session WebSocket.
  * Receives session state from parent (e.g. HomeContent) so the socket is
  * created only when Start is clicked and one hook instance owns the session.
  */

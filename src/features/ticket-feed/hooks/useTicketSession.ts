@@ -1,7 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { createSessionWebSocket } from '@/core/api/websocket'
+import { createTicketSessionWebSocket } from '@/core/api/ticket-session-ws'
+import { ensureSession } from '@/core/api/session-init'
 import { TicketData } from '../types'
 import { mapApiTicketToTicketData } from '../utils/mapApiTicket'
 
@@ -28,11 +29,6 @@ function generateUUID(): string {
   })
 }
 
-/**
- * Pull-based ticket session: send UUID → backend responds with exactly one ticket JSON.
- * Socket is created only when startSession() is called (e.g. on Start button).
- * One socket per session; closed on unmount.
- */
 export const useTicketSession = () => {
   const [tickets, setTickets] = useState<TicketData[]>([])
   const [status, setStatus] = useState<SessionStatus>('idle')
@@ -42,17 +38,26 @@ export const useTicketSession = () => {
   const socketRef = useRef<WebSocket | null>(null)
   const isStartedRef = useRef(false)
 
-  const startSession = useCallback(() => {
+  const startSession = useCallback(async () => {
     if (typeof window === 'undefined') return
     if (socketRef.current != null) {
       wsDebugLog('session already started, skipping')
       return
     }
 
+    try {
+      await ensureSession()
+    } catch (err) {
+      setStatus('error')
+      setError('Failed to establish session')
+      console.error('[TicketSession] Session login failed:', err)
+      return
+    }
+
     console.log(
       '[TicketSession] startSession() — creating WebSocket (see [WebSocket] logs for URL and auth).',
     )
-    const socket = createSessionWebSocket()
+    const socket = createTicketSessionWebSocket()
     wsDebugLog('creating WebSocket instance', socket)
 
     if (!socket) {
@@ -103,24 +108,13 @@ export const useTicketSession = () => {
       }
     }
 
-    socket.onerror = (event: Event) => {
-      setStatus('error')
-      setError('WebSocket connection error')
-      // Always log to help debug (Postman works / browser fails)
-      console.error('[TicketSession] WebSocket error.', {
-        readyState: socket.readyState,
-        readyStateLabel: ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'][
-          socket.readyState
-        ],
-        event,
-        hint: 'If Postman works: check mixed content (HTTPS page + ws://), CORS, or auth param name (e.g. auth vs token).',
-      })
-      wsDebugLog('WebSocket error', event)
-    }
+    let lastCloseCode: number | null = null
+    let lastCloseReason: string | null = null
 
     socket.onclose = (event: CloseEvent) => {
+      lastCloseCode = event.code
+      lastCloseReason = event.reason || null
       setStatus('closed')
-      // Always log close details — codes: 1000=normal, 1001=going away, 1002=protocol error, 1003=unsupported, 1006=abnormal (no close frame)
       console.warn('[TicketSession] WebSocket closed.', {
         code: event.code,
         reason: event.reason || '(no reason)',
@@ -140,6 +134,22 @@ export const useTicketSession = () => {
         wasClean: event.wasClean,
       })
     }
+
+    socket.onerror = (event: Event) => {
+      setStatus('error')
+      setError('WebSocket connection error')
+      console.error('[TicketSession] WebSocket error.', {
+        readyState: socket.readyState,
+        closeCode: lastCloseCode,
+        closeReason: lastCloseReason,
+        event,
+        hint:
+          lastCloseCode === 1006
+            ? 'Connection failed before open: check URL (wss), auth cookie, and backend CORS.'
+            : 'Check [TicketSession] WebSocket closed. above for code/reason.',
+      })
+      wsDebugLog('WebSocket error', event)
+    }
   }, [])
 
   const requestNextTicket = useCallback(() => {
@@ -154,7 +164,6 @@ export const useTicketSession = () => {
     wsDebugLog('sent UUID for next ticket', uuid)
   }, [])
 
-  // Close socket on unmount
   useEffect(() => {
     return () => {
       if (socketRef.current) {

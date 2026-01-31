@@ -230,3 +230,12 @@ const { data } = useUser()
 ```
 
 The old `useMe` hook is still available but deprecated - it now uses the new `useUser` hook internally.
+
+## 🔌 WebSocket & CORS
+
+The ticket session connects directly from the browser to `wss://api.bbt-tg.xyz/api/session/`. That is a cross-origin request, so the **API must allow your app’s origin** (CORS) on the WebSocket upgrade. If you see a CORS error:
+
+- Ask the backend to allow your origin for the WebSocket endpoint (e.g. the `Origin` header on the upgrade request, or equivalent CORS config).
+- Or set `NEXT_PUBLIC_WS_SESSION_URL` to a same-origin proxy URL if you run a separate WebSocket proxy.
+
+Next.js cannot proxy WebSocket inside the app (Route Handlers are request/response only), so the fix is either backend CORS or an external proxy.

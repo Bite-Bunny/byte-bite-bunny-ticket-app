@@ -2,15 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { axiosHeaders, axiosTimeout, baseURL } from './config'
 import { retrieveRawInitData } from '@telegram-apps/sdk-react'
 
-/**
- * Returns the authorization value that should be used for both
- * HTTP requests and WebSocket connections.
- *
- * This centralizes the logic so our Axios instance and any
- * real-time transports stay perfectly in sync.
- */
 export const getAuthHeader = (): string | undefined => {
-  // Browser: prefer mock auth when running locally, otherwise use real Telegram data
   if (typeof window !== 'undefined') {
     const isLocalhost =
       window.location.hostname === 'localhost' ||
@@ -26,7 +18,6 @@ export const getAuthHeader = (): string | undefined => {
     }
   }
 
-  // Server-side / test fallback
   if (process.env.MOCK_INIT_AUTH) {
     return process.env.MOCK_INIT_AUTH
   }
@@ -34,16 +25,15 @@ export const getAuthHeader = (): string | undefined => {
   return undefined
 }
 
-// Create axios instance
 export const apiClient = axios.create({
   baseURL: baseURL,
   headers: {
     ...axiosHeaders,
   },
   timeout: axiosTimeout,
+  withCredentials: true,
 })
 
-// Request interceptor - add auth token dynamically
 apiClient.interceptors.request.use(
   (config) => {
     const authHeader = getAuthHeader()
@@ -59,7 +49,6 @@ apiClient.interceptors.request.use(
   },
 )
 
-// Response interceptor - handle errors globally
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response
@@ -72,7 +61,6 @@ apiClient.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // Unauthorized - could trigger logout or redirect
           console.error('Unauthorized request')
           break
         case 403:

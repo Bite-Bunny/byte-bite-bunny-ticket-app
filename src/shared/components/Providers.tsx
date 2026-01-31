@@ -6,6 +6,7 @@ import { PropsWithChildren } from 'react'
 // import { TonConnectUIProvider } from '@tonconnect/ui-react'
 import { getQueryClient } from '@/shared/lib/query-client'
 import { useTelegramLocale } from '@/shared/hooks/useTelegramLocale'
+import { SessionProvider } from '@/features/session/SessionProvider'
 
 const Providers = ({ children }: PropsWithChildren) => {
   // Automatically set locale from Telegram if no manual preference exists
@@ -15,8 +16,10 @@ const Providers = ({ children }: PropsWithChildren) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* TonConnectUIProvider manifestUrl="/tonconnect-manifest.json" - fetches wallets-v2.json; re-enable when wallet connect is needed */}
-      {children}
+      <SessionProvider>
+        {/* TonConnectUIProvider manifestUrl="/tonconnect-manifest.json" - fetches wallets-v2.json; re-enable when wallet connect is needed */}
+        {children}
+      </SessionProvider>
     </QueryClientProvider>
   )
 }
